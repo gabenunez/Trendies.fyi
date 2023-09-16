@@ -46,13 +46,9 @@ export default function Homepage() {
           <div className="flex justify-center items-center text-sm">
             Made with
             <svg
-              className=" text-red-500 mx-1 h-4 w-4"
-              fill="none"
+              className="text-red-500 mx-1 h-4 w-4"
+              fill="currentColor"
               height="24"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
               viewBox="0 0 24 24"
               width="24"
               xmlns="http://www.w3.org/2000/svg"
