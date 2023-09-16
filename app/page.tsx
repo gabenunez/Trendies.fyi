@@ -1,7 +1,6 @@
 import { Separator } from "@/components/ui/separator";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import SidebarForm from "@/components/client/forms/sidebar";
+import GraphArea from "@/components/client/graphArea";
 
 export default function Homepage() {
   return (
@@ -11,37 +10,12 @@ export default function Homepage() {
           StocksVsTrends
         </h1>
         <Separator className="my-4" />
-        <form className="space-y-4">
-          <div>
-            <Label className="text-gray-300" htmlFor="stock-symbol">
-              Stock Symbol
-            </Label>
-            <Input
-              className="bg-gray-700 text-white placeholder-gray-500"
-              id="stock-symbol"
-              placeholder="Enter stock symbol"
-            />
-          </div>
-          <div>
-            <Label className="text-gray-300" htmlFor="trend-query">
-              Trend Query
-            </Label>
-            <Input
-              className="bg-gray-700 text-white placeholder-gray-500"
-              id="trend-query"
-              placeholder="Enter trend query"
-            />
-          </div>
-          <Button
-            className="bg-gray-600 hover:bg-gray-500 text-white"
-            type="submit"
-          >
-            Submit
-          </Button>
-        </form>
+        <SidebarForm />
       </aside>
       <div className="w-full md:w-2/3 p-4 flex flex-col">
-        <div className="h-full border rounded-lg border-gray-600 flex-grow" />
+        <div className="h-full border rounded-lg border-gray-600 flex-grow">
+          <GraphArea />
+        </div>
         <footer className="w-full flex flex-col justify-center items-center bg-gray-700 text-white p-2 mt-4 rounded-lg">
           <div className="flex justify-center items-center text-sm">
             Made with
