@@ -1,6 +1,6 @@
 "use client";
 
-import { useStockStore } from "@/app/stores/stocks";
+import { useStockStore } from "@/stores/stocks";
 
 export default function GraphArea() {
   const stockSymbol = useStockStore((state) => state.stockSymbol);

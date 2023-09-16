@@ -3,7 +3,7 @@
 import StockSymbolInput from "@/components/client/inputs/stockSymbol";
 import TrendsSearchInput from "@/components/client/inputs/trendSearch";
 import { Button } from "@/components/ui/button";
-import { useStockStore } from "@/app/stores/stocks";
+import { useStockStore } from "@/stores/stocks";
 
 // Very helpful w/ understanding this!
 // https://epicreact.dev/how-to-type-a-react-form-on-submit-handler/
