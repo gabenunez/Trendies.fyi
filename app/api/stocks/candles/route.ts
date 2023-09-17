@@ -9,9 +9,13 @@ function getUnixTimestampWithSubtraction(days: number): number {
   return Math.floor(targetTimestamp / 1000);
 }
 
+type StockRequest = {
+  stockSymbol: string;
+};
+
 export async function POST(request: Request) {
   try {
-    const req = await request.json();
+    const req: StockRequest = await request.json();
 
     const { stockSymbol } = req;
 
@@ -30,7 +34,7 @@ export async function POST(request: Request) {
     const data = await res.json();
 
     return NextResponse.json({ data });
-  } catch (error: any) {
+  } catch (error: Error | UserTriggeredError | unknown) {
     console.error(error);
 
     if (error instanceof UserTriggeredError) {

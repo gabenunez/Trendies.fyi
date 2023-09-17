@@ -1,9 +1,7 @@
 "use client";
 
-import { useStockStore } from "@/stores/stocks";
+import Graph from "./graph";
 
 export default function GraphArea() {
-  const stockSymbol = useStockStore((state) => state.stockSymbol);
-
-  return <div>{stockSymbol && <h1>Selected Stonk: {stockSymbol}</h1>}</div>;
+  return <Graph />;
 }
