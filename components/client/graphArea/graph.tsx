@@ -93,7 +93,7 @@ export default function Graph() {
         >
           {/* <CartesianGrid strokeDasharray="3 3" /> */}
           <XAxis dataKey="date" />
-          <YAxis />
+          <YAxis unit="%" />
 
           <Tooltip />
           <Legend />
