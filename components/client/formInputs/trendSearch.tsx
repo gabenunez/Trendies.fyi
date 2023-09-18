@@ -3,9 +3,47 @@
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { useGoogleTrendsStore } from "@/stores/googleTrends";
 
 export default function TrendsSearchInput() {
   const [inputText, setInputText] = useState("");
+  const googleTrendsData = useGoogleTrendsStore(
+    (state) => state.googleTrendsData
+  );
+  const setGoogleTrendsData = useGoogleTrendsStore(
+    (state) => state.setGoogleTrendsData
+  );
+
+  const fetchGoogleTrendsData = async () => {
+    const data = await fetch("/api/google-trends", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ trendsQuery: inputText }),
+    });
+
+    const parsedJS0N = await data.json();
+
+    return parsedJS0N.data;
+  };
+
+  const handleKeyDown = async (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === "Enter") {
+      try {
+        const fetchedStockData = await fetchGoogleTrendsData();
+
+        setGoogleTrendsData([
+          ...googleTrendsData,
+          { searchTerm: inputText, data: fetchedStockData },
+        ]);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <fieldset>
@@ -18,6 +56,7 @@ export default function TrendsSearchInput() {
         placeholder="Enter trends query"
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
     </fieldset>
   );
