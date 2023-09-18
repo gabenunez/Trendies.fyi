@@ -10,78 +10,52 @@ import {
 } from "recharts";
 import { useStockStore } from "@/stores/stocks";
 
+function unixTimestampToDate(unixTimestamp: number): string {
+  const milliseconds = unixTimestamp * 1000;
+  const date = new Date(milliseconds);
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${month}-${day}`;
+}
+
 export default function Graph() {
   const stockData = useStockStore((state) => state.stockData);
-
-  const stockLineData = [];
+  console.log(stockData);
+  const graphLineData = [];
 
   // Loop over object values
+  // Loop over object values
   Object.keys(stockData).forEach((key) => {
-    stockData[key].t.forEach((item, index) => {
-      const existingEntry = stockLineData.find((entry) => entry.time === item);
+    stockData[key].t.forEach((timestamp, index) => {
+      const existingEntry = graphLineData.find(
+        (entry) => entry.time === timestamp
+      );
+      const newEntry = {
+        time: timestamp,
+        date: unixTimestampToDate(timestamp),
+        [key]: stockData[key].c[index],
+        [`${key}-average`]: stockData[key].averages[index],
+      };
+
       if (existingEntry) {
-        existingEntry[key] = stockData[key].c[index];
+        Object.assign(existingEntry, newEntry);
       } else {
-        stockLineData.push({
-          time: item,
-          [key]: stockData[key].c[index],
-        });
+        graphLineData.push(newEntry);
       }
     });
   });
 
-  const data = [
-    {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
-
-  if (stockData) {
+  console.log(graphLineData);
+  if (graphLineData.length) {
     return (
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           width={500}
           height={300}
-          data={stockLineData}
+          data={graphLineData}
           margin={{
             top: 5,
             right: 30,
@@ -89,19 +63,22 @@ export default function Graph() {
             bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="time" />
+          {/* <CartesianGrid strokeDasharray="3 3" /> */}
+          <XAxis dataKey="date" />
           <YAxis />
+
           <Tooltip />
           <Legend />
 
           {Object.keys(stockData).map((symbol) => (
             <Line
               key={symbol}
+              name={`Stock: ${symbol.toUpperCase()}`}
               type="monotone"
-              dataKey={symbol}
+              dataKey={`${symbol}-average`}
               stroke="#8884d8"
               activeDot={{ r: 8 }}
+              legendType="circle"
             />
           ))}
         </LineChart>

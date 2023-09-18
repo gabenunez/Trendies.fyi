@@ -30,3 +30,16 @@ export async function fetchFinnhubAPI(path: string, options?: RequestInit) {
 }
 
 export class UserTriggeredError extends Error {}
+
+export function calculatePercentages(numbers: number[]): number[] {
+  // Find the highest and lowest numbers in the array
+  const maxNum = Math.max(...numbers);
+  const minNum = Math.min(...numbers);
+
+  // Calculate relative percentages using Array.map()
+  const percentages: number[] = numbers.map((num) =>
+    parseFloat(Number(((num - minNum) / (maxNum - minNum)) * 100).toFixed(2))
+  );
+
+  return percentages;
+}

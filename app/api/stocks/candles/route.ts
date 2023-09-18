@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
-import { fetchFinnhubAPI, UserTriggeredError } from "@/lib/utils";
+import {
+  fetchFinnhubAPI,
+  UserTriggeredError,
+  calculatePercentages,
+} from "@/lib/utils";
 
 function getUnixTimestampWithSubtraction(days: number): number {
   const millisecondsPerDay = 24 * 60 * 60 * 1000;
@@ -32,6 +36,8 @@ export async function POST(request: Request) {
     );
 
     const data = await res.json();
+
+    data.averages = calculatePercentages(data.c);
 
     return NextResponse.json({ data });
   } catch (error: Error | UserTriggeredError | unknown) {
