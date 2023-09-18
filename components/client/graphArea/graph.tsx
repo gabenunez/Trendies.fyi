@@ -28,8 +28,6 @@ export default function Graph() {
     (state) => state.googleTrendsData
   );
 
-  console.log(googleTrendsData);
-
   let graphLineData = [];
 
   // Loop over object values
@@ -75,10 +73,9 @@ export default function Graph() {
     });
   });
 
-  graphLineData = graphLineData.sort(function (a, b) {
-    return a.time[1] - b.time[1];
+  graphLineData = graphLineData.slice().sort(function (a, b) {
+    return a.time - b.time;
   });
-  console.log(graphLineData);
 
   if (graphLineData.length) {
     return (
