@@ -1,4 +1,11 @@
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 import SidebarForm from "@/components/client/forms/sidebar";
 import GraphArea from "@/components/client/graphArea";
 
@@ -10,6 +17,7 @@ export default function Homepage() {
           StocksVsTrends
         </h1>
         <Separator className="my-4" />
+
         <SidebarForm />
       </aside>
       <div className="w-full md:w-2/3 p-4 flex flex-col">

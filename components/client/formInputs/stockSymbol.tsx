@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { useStockStore } from "@/stores/stocks";
+import { RiStockLine } from "react-icons/ri";
+import { CiCircleRemove } from "react-icons/ci";
 
 export default function StockSymbolInput() {
   const [inputText, setInputText] = useState("");
@@ -43,17 +46,23 @@ export default function StockSymbolInput() {
 
   return (
     <fieldset>
-      <Label className="text-gray-300" htmlFor="stockSymbol">
+      <Label hidden className="text-gray-300" htmlFor="stockSymbol">
         Stock Symbol
       </Label>
-      <Input
-        className="bg-gray-700 text-white placeholder-gray-500"
-        id="stockSymbol"
-        placeholder="Enter stock symbol"
-        value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
-        onKeyDown={handleKeyDown}
-      />
+      <div className="flex items-center">
+        <RiStockLine size="1.8em" className="mr-2" />
+        <Input
+          className="bg-gray-700 text-white placeholder-gray-500"
+          id="stockSymbol"
+          placeholder="Enter Stock Symbol"
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+        <Button className="ml-1 px-1" variant="ghost">
+          <CiCircleRemove size="1.8em" />
+        </Button>
+      </div>
     </fieldset>
   );
 }
