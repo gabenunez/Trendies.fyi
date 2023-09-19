@@ -38,13 +38,13 @@ export default function StockSymbolInput({ handleRemoveLine }) {
         console.log(error);
       }
     }
-
-    if (event.key === "*") {
-      event.preventDefault();
-      const { [inputText]: _, ...newState } = stockData;
-      setStockData(newState);
-    }
   };
+
+  function removeFromList() {
+    const { [inputText]: _, ...newState } = stockData;
+    setStockData(newState);
+    handleRemoveLine();
+  }
 
   return (
     <fieldset>
@@ -61,11 +61,7 @@ export default function StockSymbolInput({ handleRemoveLine }) {
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <Button
-          onClick={handleRemoveLine}
-          className="ml-1 px-1"
-          variant="ghost"
-        >
+        <Button onClick={removeFromList} className="ml-1 px-1" variant="ghost">
           <CiCircleRemove size="1.8em" />
         </Button>
       </div>

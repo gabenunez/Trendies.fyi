@@ -53,6 +53,14 @@ export default function TrendsSearchInput({
     }
   };
 
+  function removeFromList() {
+    setGoogleTrendsData(
+      googleTrendsData.filter((trendData) => trendData.searchTerm !== inputText)
+    );
+
+    handleRemoveLine();
+  }
+
   return (
     <fieldset>
       <Label hidden className="text-gray-300" htmlFor="trendQuery">
@@ -68,11 +76,7 @@ export default function TrendsSearchInput({
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <Button
-          onClick={handleRemoveLine}
-          className="ml-1 px-1"
-          variant="ghost"
-        >
+        <Button onClick={removeFromList} className="ml-1 px-1" variant="ghost">
           <CiCircleRemove size="1.8em" />
         </Button>
       </div>
