@@ -85,9 +85,9 @@ export default function Graph() {
           height={300}
           data={graphLineData}
           margin={{
-            top: 5,
-            right: 30,
-            left: 20,
+            top: 0,
+            right: 5,
+            left: 5,
             bottom: 5,
           }}
         >
@@ -100,19 +100,20 @@ export default function Graph() {
 
           {Object.keys(stockData).map((symbol) => (
             <Line
-              key={symbol}
+              key={symbol + "-stock"}
               name={`Stock: ${symbol.toUpperCase()}`}
               type="monotone"
               dataKey={`${symbol}-average`}
               stroke="#3b82f5"
               activeDot={{ r: 8 }}
               legendType="circle"
+              connectNulls={true}
             />
           ))}
 
           {googleTrendsData.map((trendSearch, index) => (
             <Line
-              key={trendSearch.searchTerm}
+              key={trendSearch.searchTerm + "-GT"} // GT in case that stocks have the same key
               name={`Trend: ${trendSearch.searchTerm}`}
               type="monotone"
               dataKey={`${index}-trend-search-value`}

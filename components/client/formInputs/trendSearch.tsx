@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useGoogleTrendsStore } from "@/stores/googleTrends";
 import { HiTrendingUp } from "react-icons/hi";
-import { CiCircleRemove } from "react-icons/ci";
+import { CiCircleRemove, CiSearch } from "react-icons/ci";
+import { MouseEvent, KeyboardEvent } from "react";
 
 export default function TrendsSearchInput({
   handleRemoveLine,
@@ -14,9 +15,12 @@ export default function TrendsSearchInput({
   handleRemoveLine: () => void;
 }) {
   const [inputText, setInputText] = useState("");
+  const [inputFinalized, setInputFinalized] = useState(false);
+
   const googleTrendsData = useGoogleTrendsStore(
     (state) => state.googleTrendsData
   );
+
   const setGoogleTrendsData = useGoogleTrendsStore(
     (state) => state.setGoogleTrendsData
   );
@@ -35,21 +39,27 @@ export default function TrendsSearchInput({
     return parsedJS0N.data;
   };
 
+  const handleSubmission = async (event: MouseEvent | KeyboardEvent) => {
+    event.preventDefault();
+    setInputFinalized(true);
+    try {
+      const fetchedStockData = await fetchGoogleTrendsData();
+
+      setGoogleTrendsData([
+        ...googleTrendsData,
+        { searchTerm: inputText, data: fetchedStockData },
+      ]);
+    } catch (error) {
+      setInputFinalized(false);
+      console.log(error);
+    }
+  };
+
   const handleKeyDown = async (
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (event.key === "Enter") {
-      event.preventDefault();
-      try {
-        const fetchedStockData = await fetchGoogleTrendsData();
-
-        setGoogleTrendsData([
-          ...googleTrendsData,
-          { searchTerm: inputText, data: fetchedStockData },
-        ]);
-      } catch (error) {
-        console.log(error);
-      }
+      await handleSubmission(event);
     }
   };
 
@@ -75,10 +85,25 @@ export default function TrendsSearchInput({
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={handleKeyDown}
+          disabled={inputFinalized}
         />
-        <Button onClick={removeFromList} className="ml-1 px-1" variant="ghost">
-          <CiCircleRemove size="1.8em" />
-        </Button>
+        {inputFinalized ? (
+          <Button
+            onClick={removeFromList}
+            className="ml-1 px-1"
+            variant="ghost"
+          >
+            <CiCircleRemove size="1.8em" />
+          </Button>
+        ) : (
+          <Button
+            className="ml-1 px-1"
+            variant="ghost"
+            onClick={handleSubmission}
+          >
+            <CiSearch size="1.8em" />
+          </Button>
+        )}
       </div>
     </fieldset>
   );

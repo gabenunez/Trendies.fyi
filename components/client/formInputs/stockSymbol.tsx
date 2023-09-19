@@ -6,10 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useStockStore } from "@/stores/stocks";
 import { RiStockFill } from "react-icons/ri";
-import { CiCircleRemove } from "react-icons/ci";
+import { CiCircleRemove, CiSearch } from "react-icons/ci";
+import { MouseEvent, KeyboardEvent } from "react";
 
 export default function StockSymbolInput({ handleRemoveLine }) {
   const [inputText, setInputText] = useState("");
+  const [inputFinalized, setInputFinalized] = useState(false);
   const stockData = useStockStore((state) => state.stockData);
   const setStockData = useStockStore((state) => state.setStockData);
 
@@ -26,17 +28,23 @@ export default function StockSymbolInput({ handleRemoveLine }) {
     return parsedJS0N.data;
   };
 
+  const handleSubmission = async (event: KeyboardEvent | MouseEvent) => {
+    event.preventDefault();
+    setInputFinalized(true);
+    try {
+      const fetchedStockData = await fetchStockData();
+      setStockData({ ...stockData, [inputText]: fetchedStockData });
+    } catch (error) {
+      setInputFinalized(false);
+      console.log(error);
+    }
+  };
+
   const handleKeyDown = async (
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (event.key === "Enter") {
-      event.preventDefault();
-      try {
-        const fetchedStockData = await fetchStockData();
-        setStockData({ ...stockData, [inputText]: fetchedStockData });
-      } catch (error) {
-        console.log(error);
-      }
+      handleSubmission(event);
     }
   };
 
@@ -60,10 +68,25 @@ export default function StockSymbolInput({ handleRemoveLine }) {
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={handleKeyDown}
+          disabled={inputFinalized}
         />
-        <Button onClick={removeFromList} className="ml-1 px-1" variant="ghost">
-          <CiCircleRemove size="1.8em" />
-        </Button>
+        {inputFinalized ? (
+          <Button
+            onClick={removeFromList}
+            className="ml-1 px-1"
+            variant="ghost"
+          >
+            <CiCircleRemove size="1.8em" />
+          </Button>
+        ) : (
+          <Button
+            className="ml-1 px-1"
+            variant="ghost"
+            onClick={handleSubmission}
+          >
+            <CiSearch size="1.8em" />
+          </Button>
+        )}
       </div>
     </fieldset>
   );
