@@ -5,10 +5,10 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useStockStore } from "@/stores/stocks";
-import { RiStockLine } from "react-icons/ri";
+import { RiStockFill } from "react-icons/ri";
 import { CiCircleRemove } from "react-icons/ci";
 
-export default function StockSymbolInput() {
+export default function StockSymbolInput({ handleRemoveLine }) {
   const [inputText, setInputText] = useState("");
   const stockData = useStockStore((state) => state.stockData);
   const setStockData = useStockStore((state) => state.setStockData);
@@ -30,6 +30,7 @@ export default function StockSymbolInput() {
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (event.key === "Enter") {
+      event.preventDefault();
       try {
         const fetchedStockData = await fetchStockData();
         setStockData({ ...stockData, [inputText]: fetchedStockData });
@@ -39,6 +40,7 @@ export default function StockSymbolInput() {
     }
 
     if (event.key === "*") {
+      event.preventDefault();
       const { [inputText]: _, ...newState } = stockData;
       setStockData(newState);
     }
@@ -50,7 +52,7 @@ export default function StockSymbolInput() {
         Stock Symbol
       </Label>
       <div className="flex items-center">
-        <RiStockLine size="1.8em" className="mr-2" />
+        <RiStockFill size="1.8em" className="mr-2" />
         <Input
           className="bg-gray-700 text-white placeholder-gray-500"
           id="stockSymbol"
@@ -59,7 +61,11 @@ export default function StockSymbolInput() {
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <Button className="ml-1 px-1" variant="ghost">
+        <Button
+          onClick={handleRemoveLine}
+          className="ml-1 px-1"
+          variant="ghost"
+        >
           <CiCircleRemove size="1.8em" />
         </Button>
       </div>

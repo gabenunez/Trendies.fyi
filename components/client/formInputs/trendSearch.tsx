@@ -8,7 +8,11 @@ import { useGoogleTrendsStore } from "@/stores/googleTrends";
 import { HiTrendingUp } from "react-icons/hi";
 import { CiCircleRemove } from "react-icons/ci";
 
-export default function TrendsSearchInput() {
+export default function TrendsSearchInput({
+  handleRemoveLine,
+}: {
+  handleRemoveLine: () => void;
+}) {
   const [inputText, setInputText] = useState("");
   const googleTrendsData = useGoogleTrendsStore(
     (state) => state.googleTrendsData
@@ -35,6 +39,7 @@ export default function TrendsSearchInput() {
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (event.key === "Enter") {
+      event.preventDefault();
       try {
         const fetchedStockData = await fetchGoogleTrendsData();
 
@@ -63,7 +68,11 @@ export default function TrendsSearchInput() {
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <Button className="ml-1 px-1" variant="ghost">
+        <Button
+          onClick={handleRemoveLine}
+          className="ml-1 px-1"
+          variant="ghost"
+        >
           <CiCircleRemove size="1.8em" />
         </Button>
       </div>

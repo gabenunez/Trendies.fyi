@@ -9,8 +9,26 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 
 export default function SidebarForm() {
+  const [openedLines, setOpenLines] = useState<
+    { component: JSX.Element; id: string }[]
+  >([]);
+
+  function handleAddLine(LineType: JSX.Element) {
+    setOpenLines([
+      ...openedLines,
+      { component: LineType, id: crypto.randomUUID() },
+    ]);
+  }
+
+  function handleRemoveLine(idToFilter: string): void {
+    setOpenLines((prevState) =>
+      prevState.filter((item) => item.id !== idToFilter)
+    );
+  }
+
   return (
     <form className="space-y-4">
       <DropdownMenu>
@@ -38,13 +56,21 @@ export default function SidebarForm() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
-          <DropdownMenuItem>Add Stock Ticker</DropdownMenuItem>
-          <DropdownMenuItem>Add Google Trend</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleAddLine(StockSymbolInput)}>
+            Add Stock Ticker
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleAddLine(TrendsSearchInput)}>
+            Add Google Trend
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <StockSymbolInput />
-      <TrendsSearchInput />
+      {openedLines.map((line) => {
+        const { component: Component, id } = line;
+        return (
+          <Component key={id} handleRemoveLine={() => handleRemoveLine(id)} />
+        );
+      })}
     </form>
   );
 }
