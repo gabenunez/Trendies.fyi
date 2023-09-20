@@ -30,7 +30,7 @@ export default function Graph() {
 
   let graphLineData: { time: number }[] = [];
 
-  // Loop over object values
+  // Loop and add each data type to the chart
   stockData.forEach((dataItem, stockDataIndex) => {
     dataItem.data.t.forEach((timestamp, timestampIndex) => {
       const existingEntry = graphLineData.find(
