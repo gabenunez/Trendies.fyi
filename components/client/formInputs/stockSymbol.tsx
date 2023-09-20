@@ -1,21 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { useStockStore } from "@/stores/stocks";
-import { RiStockFill } from "react-icons/ri";
-import { CiCircleRemove, CiSearch } from "react-icons/ci";
-import { MouseEvent, KeyboardEvent } from "react";
+import BaseSearchInput from "./baseSearchInput";
 
-export default function StockSymbolInput({ handleRemoveLine }) {
-  const [inputText, setInputText] = useState("");
+export default function StockSymbolInput({
+  handleRemoveLine,
+}: {
+  handleRemoveLine: () => void;
+}) {
   const [inputFinalized, setInputFinalized] = useState(false);
   const stockData = useStockStore((state) => state.stockData);
   const setStockData = useStockStore((state) => state.setStockData);
 
-  const fetchStockData = async () => {
+  // HACK FOR NOW...
+  const [finalizedText, setFinalizedText] = useState("");
+
+  const fetchStockData = async (inputText: string) => {
     const data = await fetch("/api/stocks/candles", {
       method: "POST",
       headers: {
@@ -28,66 +29,33 @@ export default function StockSymbolInput({ handleRemoveLine }) {
     return parsedJS0N.data;
   };
 
-  const handleSubmission = async (event: KeyboardEvent | MouseEvent) => {
-    event.preventDefault();
+  const handleSubmission = async (inputText: string) => {
     setInputFinalized(true);
     try {
-      const fetchedStockData = await fetchStockData();
+      const fetchedStockData = await fetchStockData(inputText);
+      console.log(fetchedStockData);
       setStockData({ ...stockData, [inputText]: fetchedStockData });
+      setFinalizedText(inputText);
     } catch (error) {
       setInputFinalized(false);
       console.log(error);
     }
   };
 
-  const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === "Enter") {
-      handleSubmission(event);
-    }
-  };
-
   function removeFromList() {
-    const { [inputText]: _, ...newState } = stockData;
+    const { [finalizedText]: _, ...newState } = stockData;
     setStockData(newState);
     handleRemoveLine();
   }
 
   return (
-    <fieldset>
-      <Label hidden className="text-gray-300" htmlFor="stockSymbol">
-        Stock Symbol
-      </Label>
-      <div className="flex items-center">
-        <RiStockFill size="1.8em" className="mr-2" />
-        <Input
-          className="bg-gray-700 text-white placeholder-gray-500"
-          id="stockSymbol"
-          placeholder="Enter Stock Symbol"
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          onKeyDown={handleKeyDown}
-          disabled={inputFinalized}
-        />
-        {inputFinalized ? (
-          <Button
-            onClick={removeFromList}
-            className="ml-1 px-1"
-            variant="ghost"
-          >
-            <CiCircleRemove size="1.8em" />
-          </Button>
-        ) : (
-          <Button
-            className="ml-1 px-1"
-            variant="ghost"
-            onClick={handleSubmission}
-          >
-            <CiSearch size="1.8em" />
-          </Button>
-        )}
-      </div>
-    </fieldset>
+    <BaseSearchInput
+      htmlId="stockTickerSymbol"
+      label="Stock Ticker"
+      placeholder="Enter Stock Ticker Symbol"
+      inputFinalized={inputFinalized}
+      handleSubmission={handleSubmission}
+      handleDelete={removeFromList}
+    />
   );
 }

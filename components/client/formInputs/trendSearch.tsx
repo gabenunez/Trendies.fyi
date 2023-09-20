@@ -8,13 +8,13 @@ import { useGoogleTrendsStore } from "@/stores/googleTrends";
 import { HiTrendingUp } from "react-icons/hi";
 import { CiCircleRemove, CiSearch } from "react-icons/ci";
 import { MouseEvent, KeyboardEvent } from "react";
+import BaseSearchInput from "./baseSearchInput";
 
 export default function TrendsSearchInput({
   handleRemoveLine,
 }: {
   handleRemoveLine: () => void;
 }) {
-  const [inputText, setInputText] = useState("");
   const [inputFinalized, setInputFinalized] = useState(false);
 
   const googleTrendsData = useGoogleTrendsStore(
@@ -25,7 +25,7 @@ export default function TrendsSearchInput({
     (state) => state.setGoogleTrendsData
   );
 
-  const fetchGoogleTrendsData = async () => {
+  const fetchGoogleTrendsData = async (inputText: string) => {
     const data = await fetch("/api/google-trends", {
       method: "POST",
       headers: {
@@ -39,11 +39,10 @@ export default function TrendsSearchInput({
     return parsedJS0N.data;
   };
 
-  const handleSubmission = async (event: MouseEvent | KeyboardEvent) => {
-    event.preventDefault();
+  const handleSubmission = async (inputText: string) => {
     setInputFinalized(true);
     try {
-      const fetchedStockData = await fetchGoogleTrendsData();
+      const fetchedStockData = await fetchGoogleTrendsData(inputText);
 
       setGoogleTrendsData([
         ...googleTrendsData,
@@ -55,15 +54,7 @@ export default function TrendsSearchInput({
     }
   };
 
-  const handleKeyDown = async (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === "Enter") {
-      await handleSubmission(event);
-    }
-  };
-
-  function removeFromList() {
+  function removeFromList(inputText: string) {
     setGoogleTrendsData(
       googleTrendsData.filter((trendData) => trendData.searchTerm !== inputText)
     );
@@ -72,39 +63,13 @@ export default function TrendsSearchInput({
   }
 
   return (
-    <fieldset>
-      <Label hidden className="text-gray-300" htmlFor="trendQuery">
-        Trends Search Query
-      </Label>
-      <div className="flex items-center">
-        <HiTrendingUp size="1.8em" className="mr-2" />
-        <Input
-          className="bg-gray-700 text-white placeholder-gray-500"
-          id="trendQuery"
-          placeholder="Enter Google Trends Query"
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          onKeyDown={handleKeyDown}
-          disabled={inputFinalized}
-        />
-        {inputFinalized ? (
-          <Button
-            onClick={removeFromList}
-            className="ml-1 px-1"
-            variant="ghost"
-          >
-            <CiCircleRemove size="1.8em" />
-          </Button>
-        ) : (
-          <Button
-            className="ml-1 px-1"
-            variant="ghost"
-            onClick={handleSubmission}
-          >
-            <CiSearch size="1.8em" />
-          </Button>
-        )}
-      </div>
-    </fieldset>
+    <BaseSearchInput
+      htmlId="googleTrendSearch"
+      label="Google Trends Query"
+      placeholder="Enter Google Trends Query"
+      inputFinalized={inputFinalized}
+      handleSubmission={handleSubmission}
+      handleDelete={removeFromList}
+    />
   );
 }
