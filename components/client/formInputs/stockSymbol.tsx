@@ -13,9 +13,6 @@ export default function StockSymbolInput({
   const stockData = useStockStore((state) => state.stockData);
   const setStockData = useStockStore((state) => state.setStockData);
 
-  // HACK FOR NOW...
-  const [finalizedText, setFinalizedText] = useState("");
-
   const fetchStockData = async (inputText: string) => {
     const data = await fetch("/api/stocks/candles", {
       method: "POST",
@@ -33,18 +30,21 @@ export default function StockSymbolInput({
     setInputFinalized(true);
     try {
       const fetchedStockData = await fetchStockData(inputText);
-      console.log(fetchedStockData);
-      setStockData({ ...stockData, [inputText]: fetchedStockData });
-      setFinalizedText(inputText);
+
+      setStockData([
+        ...stockData,
+        { searchTerm: inputText, data: fetchedStockData },
+      ]);
     } catch (error) {
       setInputFinalized(false);
       console.log(error);
     }
   };
 
-  function removeFromList() {
-    const { [finalizedText]: _, ...newState } = stockData;
-    setStockData(newState);
+  function removeFromList(inputText: string) {
+    // Ideally we get here
+    setStockData(stockData.filter((data) => data.searchTerm !== inputText));
+
     handleRemoveLine();
   }
 

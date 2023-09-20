@@ -1,15 +1,11 @@
 import { create } from "zustand";
 
 interface StocksState {
-  stockSymbol: string;
-  setStockSymbol: (stockSymbol: string) => void;
-  stockData: {};
-  setStockData: (stockData: object) => void;
+  stockData: {}[];
+  setStockData: (stockSymbol: {}[]) => void;
 }
 
 export const useStockStore = create<StocksState>()((set) => ({
-  stockSymbol: "",
-  setStockSymbol: (stockSymbol) => set((state) => ({ stockSymbol })),
-  stockData: {},
-  setStockData: (stockData) => set((state) => ({ stockData })),
+  stockData: [],
+  setStockData: (stockData) => set({ stockData }),
 }));

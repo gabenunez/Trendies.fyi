@@ -31,16 +31,16 @@ export default function Graph() {
   let graphLineData: { time: number }[] = [];
 
   // Loop over object values
-  Object.keys(stockData).forEach((key) => {
-    stockData[key].t.forEach((timestamp, index) => {
+  stockData.forEach((dataItem, stockDataIndex) => {
+    dataItem.data.t.forEach((timestamp, timestampIndex) => {
       const existingEntry = graphLineData.find(
         (entry) => entry.time === timestamp
       );
       const newEntry = {
         time: timestamp,
         date: unixTimestampToDate(timestamp),
-        [key]: stockData[key].c[index],
-        [`${key}-average`]: stockData[key].averages[index],
+        [`${stockDataIndex}-stock-search-value`]:
+          dataItem.data.averages[timestampIndex],
       };
 
       if (existingEntry) {
@@ -96,18 +96,21 @@ export default function Graph() {
           <Tooltip />
           <Legend />
 
-          {Object.keys(stockData).map((symbol) => (
-            <Line
-              key={symbol + "-stock"}
-              name={`Stock: ${symbol.toUpperCase()}`}
-              type="monotone"
-              dataKey={`${symbol}-average`}
-              stroke="#3b82f5"
-              activeDot={{ r: 8 }}
-              legendType="circle"
-              connectNulls={true}
-            />
-          ))}
+          {stockData.map((item, index) => {
+            console.log(item);
+            return (
+              <Line
+                key={item.searchTerm + "-stock"}
+                name={`Stock: ${item.searchTerm.toUpperCase()}`}
+                type="monotone"
+                dataKey={`${index}-stock-search-value`}
+                stroke="#3b82f5"
+                activeDot={{ r: 8 }}
+                legendType="circle"
+                connectNulls={true}
+              />
+            );
+          })}
 
           {googleTrendsData.map((trendSearch, index) => (
             <Line
