@@ -28,7 +28,7 @@ export default function Graph() {
     (state) => state.googleTrendsData
   );
 
-  let graphLineData = [];
+  let graphLineData: { time: number }[] = [];
 
   // Loop over object values
   Object.keys(stockData).forEach((key) => {
@@ -52,8 +52,6 @@ export default function Graph() {
   });
 
   googleTrendsData.forEach((trendData, index) => {
-    console.log(trendData.searchTerm);
-
     trendData.data.forEach((item) => {
       const existingEntry = graphLineData.find(
         (entry) => entry.time === item.timestamp
