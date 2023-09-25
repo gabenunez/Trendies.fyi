@@ -1,6 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 import SidebarForm from "@/components/client/forms/sidebar";
 import GraphArea from "@/components/client/graphArea";
+import QueryManager from "@/components/client/queryManager";
 
 export default function Homepage() {
   return (
@@ -9,6 +10,7 @@ export default function Homepage() {
         <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tighter text-center text-green-500 hover:text-blue-500 transition-colors duration-500 ease-in-out">
           StocksVsTrends
         </h1>
+        <QueryManager />
         <Separator className="my-4" />
 
         <SidebarForm />

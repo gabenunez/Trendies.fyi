@@ -56,8 +56,6 @@ export default function TrendsSearchInput({
       } else {
         setErrorMessage("Unable to fetch Trends data. Please try again later.");
       }
-
-      console.log(error);
     }
   };
 

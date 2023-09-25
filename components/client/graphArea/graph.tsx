@@ -3,7 +3,6 @@ import {
   Line,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
@@ -115,7 +114,6 @@ export default function Graph() {
           <Legend />
 
           {stockData.map((item, index) => {
-            console.log(item);
             return (
               <Line
                 key={item.searchTerm + "-stock"}
