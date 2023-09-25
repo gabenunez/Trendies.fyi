@@ -1,13 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { useGoogleTrendsStore } from "@/stores/googleTrends";
 import { HiTrendingUp } from "react-icons/hi";
-import { CiCircleRemove, CiSearch } from "react-icons/ci";
-import { MouseEvent, KeyboardEvent } from "react";
 import BaseSearchInput from "./baseSearchInput";
 
 export default function TrendsSearchInput({
@@ -16,6 +11,7 @@ export default function TrendsSearchInput({
   handleRemoveLine: () => void;
 }) {
   const [inputFinalized, setInputFinalized] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const googleTrendsData = useGoogleTrendsStore(
     (state) => state.googleTrendsData
@@ -67,9 +63,12 @@ export default function TrendsSearchInput({
       htmlId="googleTrendSearch"
       label="Google Trends Query"
       placeholder="Enter Google Trends Query"
+      icon={HiTrendingUp}
       inputFinalized={inputFinalized}
       handleSubmission={handleSubmission}
       handleDelete={removeFromList}
+      errorMessage={errorMessage}
+      setErrorMessage={setErrorMessage}
     />
   );
 }

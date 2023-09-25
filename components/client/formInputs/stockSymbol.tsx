@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useStockStore } from "@/stores/stocks";
 import BaseSearchInput from "./baseSearchInput";
+import { RiStockFill } from "react-icons/ri";
 
 export default function StockSymbolInput({
   handleRemoveLine,
@@ -10,6 +11,8 @@ export default function StockSymbolInput({
   handleRemoveLine: () => void;
 }) {
   const [inputFinalized, setInputFinalized] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const stockData = useStockStore((state) => state.stockData);
   const setStockData = useStockStore((state) => state.setStockData);
 
@@ -23,6 +26,12 @@ export default function StockSymbolInput({
     });
 
     const parsedJS0N = await data.json();
+
+    // Handle 400/500 Errors
+    if (!data.ok) {
+      throw parsedJS0N;
+    }
+
     return parsedJS0N.data;
   };
 
@@ -36,8 +45,13 @@ export default function StockSymbolInput({
         { searchTerm: inputText, data: fetchedStockData },
       ]);
     } catch (error) {
+      if (error?.message) {
+        setErrorMessage(error?.message);
+      } else {
+        setErrorMessage("Unable to fetch stock data. Please try again later.");
+      }
+
       setInputFinalized(false);
-      console.log(error);
     }
   };
 
@@ -51,11 +65,14 @@ export default function StockSymbolInput({
   return (
     <BaseSearchInput
       htmlId="stockTickerSymbol"
+      icon={RiStockFill}
       label="Stock Ticker"
       placeholder="Enter Stock Ticker Symbol"
       inputFinalized={inputFinalized}
       handleSubmission={handleSubmission}
       handleDelete={removeFromList}
+      errorMessage={errorMessage}
+      setErrorMessage={setErrorMessage}
     />
   );
 }

@@ -37,14 +37,19 @@ export async function POST(request: Request) {
 
     const data = await res.json();
 
+    if (data?.s === "no_data") {
+      throw new UserTriggeredError("No stock data found");
+    }
+
     data.averages = calculatePercentages(data.c);
 
     return NextResponse.json({ data });
   } catch (error: Error | UserTriggeredError | unknown) {
-    console.error(error);
-
     if (error instanceof UserTriggeredError) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
+      return NextResponse.json(
+        { error: true, message: error.message },
+        { status: 400 }
+      );
     }
     return NextResponse.json(
       { error: "Unexpected error... Unable to fetch candles!" },

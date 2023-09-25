@@ -22,6 +22,25 @@ function unixTimestampToDate(unixTimestamp: number): string {
   return `${month}-${day}`;
 }
 
+const formatInfo = (value, name, props) => {
+  return [`${value}%`, name];
+};
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="w-auto h-auto bg-gray-600 p-3 bg-opacity-70 rounded-lg">
+        <p className="text-xs">{label}</p>
+        {payload.map((item, index) => (
+          <p key={item.name + index}>{`${item.name}: ${item.value}%`}</p>
+        ))}
+      </div>
+    );
+  }
+
+  return null;
+};
+
 export default function Graph() {
   const stockData = useStockStore((state) => state.stockData);
   const googleTrendsData = useGoogleTrendsStore(
@@ -89,11 +108,10 @@ export default function Graph() {
             bottom: 5,
           }}
         >
-          {/* <CartesianGrid strokeDasharray="3 3" /> */}
           <XAxis dataKey="date" />
           <YAxis unit="%" />
 
-          <Tooltip />
+          <Tooltip content={<CustomTooltip />} formatter={formatInfo} />
           <Legend />
 
           {stockData.map((item, index) => {
@@ -101,7 +119,7 @@ export default function Graph() {
             return (
               <Line
                 key={item.searchTerm + "-stock"}
-                name={`Stock: ${item.searchTerm.toUpperCase()}`}
+                name={`$${item.searchTerm.toUpperCase()}`}
                 type="monotone"
                 dataKey={`${index}-stock-search-value`}
                 stroke="#3b82f5"
@@ -115,7 +133,7 @@ export default function Graph() {
           {googleTrendsData.map((trendSearch, index) => (
             <Line
               key={trendSearch.searchTerm + "-GT"} // GT in case that stocks have the same key
-              name={`Trend: ${trendSearch.searchTerm}`}
+              name={`GT: ${trendSearch.searchTerm}`}
               type="monotone"
               dataKey={`${index}-trend-search-value`}
               stroke="#34A853"
