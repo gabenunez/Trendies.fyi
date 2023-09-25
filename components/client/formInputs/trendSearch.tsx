@@ -32,6 +32,11 @@ export default function TrendsSearchInput({
 
     const parsedJS0N = await data.json();
 
+    // Handle 400/500 Errors
+    if (!data.ok) {
+      throw parsedJS0N;
+    }
+
     return parsedJS0N.data;
   };
 
@@ -46,6 +51,12 @@ export default function TrendsSearchInput({
       ]);
     } catch (error) {
       setInputFinalized(false);
+      if (error?.message) {
+        setErrorMessage(error?.message);
+      } else {
+        setErrorMessage("Unable to fetch Trends data. Please try again later.");
+      }
+
       console.log(error);
     }
   };

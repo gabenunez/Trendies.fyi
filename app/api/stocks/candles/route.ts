@@ -51,6 +51,7 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+    console.log(error);
     return NextResponse.json(
       { error: "Unexpected error... Unable to fetch candles!" },
       { status: 500 }

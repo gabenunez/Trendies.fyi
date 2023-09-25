@@ -30,14 +30,16 @@ export async function POST(request: Request) {
         endTime: today,
       });
     } catch (err) {
-      console.error(err);
-      throw new UserTriggeredError(
-        "Unexpected error. Unable to fetch trends data."
-      );
+      throw err;
     }
 
     const parsedJSON = JSON.parse(trendsData);
     const narrowedDownData = parsedJSON.default.timelineData;
+    if (!narrowedDownData?.length) {
+      throw new UserTriggeredError(
+        "No trends data found. Please try another search."
+      );
+    }
     const cleanedData = narrowedDownData.map(
       ({
         hasData,
@@ -55,13 +57,16 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ data: cleanedData });
   } catch (error: Error | UserTriggeredError | unknown) {
-    console.error(error);
-
     if (error instanceof UserTriggeredError) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
+      return NextResponse.json(
+        { error: true, message: error.message },
+        { status: 400 }
+      );
     }
+
+    console.error(error);
     return NextResponse.json(
-      { error: "Unexpected error... Unable to fetch candles!" },
+      { error: "Unexpected error... Unable to fetch Google Trend!" },
       { status: 500 }
     );
   }
