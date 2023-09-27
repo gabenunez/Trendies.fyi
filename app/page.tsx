@@ -2,8 +2,35 @@ import { Separator } from "@/components/ui/separator";
 import SidebarForm from "@/components/client/forms/sidebar";
 import GraphArea from "@/components/client/graphArea";
 import QueryManager from "@/components/client/queryManager";
+import { fetchStockCandles } from "./api/stocks/candles/route";
 
-export default function Homepage() {
+export type InitialStocksType = { searchTerm: string; data: {} }[];
+
+export default async function Homepage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  let initialStocks: InitialStocksType = [];
+  if (searchParams.stocks) {
+    let arrOfStocks: string[] = [];
+    if (typeof searchParams.stocks === "string") {
+      arrOfStocks = searchParams.stocks.split(",");
+    }
+    const arrOfStockPromises = arrOfStocks.map((symbol) =>
+      fetchStockCandles(symbol)
+    );
+
+    const allStockData = await Promise.all(arrOfStockPromises);
+
+    initialStocks = allStockData.map((stockData, index) => {
+      return {
+        searchTerm: arrOfStocks[index],
+        data: stockData,
+      };
+    });
+  }
+
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-800 text-white">
       <aside className="w-full md:w-1/3 p-4 border-r border-gray-600">
@@ -13,7 +40,7 @@ export default function Homepage() {
         <QueryManager />
         <Separator className="my-4" />
 
-        <SidebarForm />
+        <SidebarForm initialStocks={initialStocks} />
       </aside>
       <div className="w-full h-full md:w-2/3 p-4 flex flex-col">
         <div className="h-full border rounded-lg border-gray-600 flex-grow">

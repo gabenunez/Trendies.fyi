@@ -9,17 +9,51 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { InitialStocksType } from "../../../app/page";
+import { useStockStore } from "@/stores/stocks";
 
-export default function SidebarForm() {
-  const [openedLines, setOpenLines] = useState<
-    { component: JSX.Element; id: string }[]
-  >([]);
+type LineType = {
+  component: JSX.Element;
+  id: string;
+  initialValue?: string;
+  initialData?: {};
+};
 
-  function handleAddLine(LineType: JSX.Element) {
+export default function SidebarForm({
+  initialStocks,
+}: {
+  initialStocks: InitialStocksType;
+}) {
+  const stockData = useStockStore((state) => state.stockData);
+  const setStockData = useStockStore((state) => state.setStockData);
+
+  function fetchInitialStocks() {
+    let stocks: LineType[] = [];
+
+    if (initialStocks?.length) {
+      stocks = initialStocks?.map((stock) => {
+        return {
+          component: StockSymbolInput,
+          id: crypto.randomUUID(),
+          initialValue: stock.searchTerm,
+          initialData: stock.data,
+        };
+      });
+    }
+
+    return stocks;
+  }
+  const [openedLines, setOpenLines] = useState<LineType[]>(fetchInitialStocks);
+
+  function handleAddLine(LineType: JSX.Element, initialValue?: string) {
     setOpenLines([
       ...openedLines,
-      { component: LineType, id: crypto.randomUUID() },
+      {
+        component: LineType,
+        initialValue: initialValue,
+        id: crypto.randomUUID(),
+      },
     ]);
   }
 
@@ -28,6 +62,10 @@ export default function SidebarForm() {
       prevState.filter((item) => item.id !== idToFilter)
     );
   }
+
+  useEffect(() => {
+    setStockData([...stockData, ...initialStocks]);
+  }, []);
 
   return (
     <form className="space-y-4">
@@ -66,9 +104,14 @@ export default function SidebarForm() {
       </DropdownMenu>
 
       {openedLines.map((line) => {
-        const { component: Component, id } = line;
+        const { component: Component, id, initialValue, initialData } = line;
         return (
-          <Component key={id} handleRemoveLine={() => handleRemoveLine(id)} />
+          <Component
+            key={id}
+            initialValue={initialValue}
+            initialData={initialData}
+            handleRemoveLine={() => handleRemoveLine(id)}
+          />
         );
       })}
     </form>

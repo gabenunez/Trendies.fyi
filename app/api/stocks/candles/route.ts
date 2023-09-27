@@ -13,6 +13,26 @@ function getUnixTimestampWithSubtraction(days: number): number {
   return Math.floor(targetTimestamp / 1000);
 }
 
+export async function fetchStockCandles(stockSymbol: string) {
+  const currentUnixTime = getUnixTimestampWithSubtraction(0);
+  const thirtyDaysAgoUnixTime = getUnixTimestampWithSubtraction(30);
+
+  // Fetches the past 30 days of trading
+  const res = await fetchFinnhubAPI(
+    `/stock/candle?symbol=${stockSymbol}&resolution=D&from=${thirtyDaysAgoUnixTime}&to=${currentUnixTime}`
+  );
+
+  const data = await res.json();
+
+  if (data?.s === "no_data") {
+    throw new UserTriggeredError("No stock data found");
+  }
+
+  data.averages = calculatePercentages(data.c);
+
+  return data;
+}
+
 type StockRequest = {
   stockSymbol: string;
 };
@@ -27,21 +47,7 @@ export async function POST(request: Request) {
       throw new UserTriggeredError("Missing stockSymbol");
     }
 
-    const currentUnixTime = getUnixTimestampWithSubtraction(0);
-    const thirtyDaysAgoUnixTime = getUnixTimestampWithSubtraction(30);
-
-    // Fetches the past 30 days of trading
-    const res = await fetchFinnhubAPI(
-      `/stock/candle?symbol=${stockSymbol}&resolution=D&from=${thirtyDaysAgoUnixTime}&to=${currentUnixTime}`
-    );
-
-    const data = await res.json();
-
-    if (data?.s === "no_data") {
-      throw new UserTriggeredError("No stock data found");
-    }
-
-    data.averages = calculatePercentages(data.c);
+    const data = await fetchStockCandles(stockSymbol);
 
     return NextResponse.json({ data });
   } catch (error: Error | UserTriggeredError | unknown) {

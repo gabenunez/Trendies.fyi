@@ -20,6 +20,7 @@ type BaseSearchInputPropsType = {
   inputFinalized: boolean;
   errorMessage: string;
   setErrorMessage: (inputText: string) => void;
+  initialValue: string;
 };
 
 export default function BaseSearchInput({
@@ -32,8 +33,9 @@ export default function BaseSearchInput({
   inputFinalized,
   errorMessage,
   setErrorMessage,
+  initialValue,
 }: BaseSearchInputPropsType) {
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState(initialValue || "");
   const [submittedText, setSubmittedText] = useState("");
 
   const handleSubmit = (event: KeyboardEvent | MouseEvent) => {
