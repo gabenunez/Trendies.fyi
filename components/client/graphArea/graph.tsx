@@ -54,8 +54,8 @@ export default function Graph({
   let graphLineData: { time: number }[] = [];
 
   // Default to SSR stock prop if waiting on state
-  const relevantStockData = stockData || serverFetchedStocks;
-  console.log(relevantStockData);
+  const relevantStockData = serverFetchedStocks;
+
   // Loop and add each data type to the chart
   relevantStockData.forEach((dataItem, stockDataIndex) => {
     dataItem.data.t.forEach((timestamp, timestampIndex) => {

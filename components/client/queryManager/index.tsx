@@ -1,11 +1,12 @@
 "use client";
 import { useStockStore } from "@/stores/stocks";
 import { useGoogleTrendsStore } from "@/stores/googleTrends";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 export default function QueryManager() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const searchParams = useSearchParams()!;
 
   function generateQueryParam(strings: string[]): string {
     const encodedStrings = strings.map((str) => encodeURIComponent(str));
@@ -13,13 +14,11 @@ export default function QueryManager() {
   }
 
   function updateQueryParam(paramName: string, paramValue: string): void {
-    const urlParams = new URLSearchParams(window.location.search);
-    urlParams.set(paramName, paramValue);
+    const params = new URLSearchParams(searchParams);
+    params.set(paramName, paramValue);
 
-    // Update the URL without refreshing the page
-    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-
-    window.history.replaceState(null, "", newUrl);
+    const newUrl = `${pathname}?${params.toString()}`;
+    router.push(newUrl);
   }
 
   useStockStore.subscribe(({ stockData }) => {
