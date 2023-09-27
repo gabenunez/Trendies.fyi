@@ -39,23 +39,7 @@ export default function StockSymbolInput({
   const setStockData = useStockStore((state) => state.setStockData);
 
   const handleSubmission = async (inputText: string) => {
-    setInputFinalized(true);
-    try {
-      const fetchedStockData = await fetchStockData(inputText);
-
-      setStockData([
-        ...stockData,
-        { searchTerm: inputText, data: fetchedStockData },
-      ]);
-    } catch (error) {
-      if (error?.message) {
-        setErrorMessage(error?.message);
-      } else {
-        setErrorMessage("Unable to fetch stock data. Please try again later.");
-      }
-
-      setInputFinalized(false);
-    }
+    setStockData([...stockData, { searchTerm: inputText }]);
   };
 
   function removeFromList(inputText: string) {
