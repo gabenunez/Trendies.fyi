@@ -54,7 +54,7 @@ export default function Graph({
 
   let graphLineData: { time: number }[] = [];
 
-  const checkStockData = initialStocks || stockData;
+  const checkStockData = stockData || initialStocks;
   // Loop and add each data type to the chart
   checkStockData.forEach((dataItem, stockDataIndex) => {
     dataItem.data.t.forEach((timestamp, timestampIndex) => {
