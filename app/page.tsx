@@ -12,6 +12,8 @@ export default async function Homepage({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   let initialStocks: InitialStocksType = [];
+  let hideWelcomeScreen: boolean = false;
+
   if (searchParams.stocks) {
     let arrOfStocks: string[] = [];
     if (typeof searchParams.stocks === "string") {
@@ -29,6 +31,7 @@ export default async function Homepage({
         data: stockData,
       };
     });
+    hideWelcomeScreen = true;
   }
 
   return (
@@ -44,7 +47,7 @@ export default async function Homepage({
       </aside>
       <div className="w-full h-full md:w-2/3 p-4 flex flex-col">
         <div className="h-full border rounded-lg border-gray-600 flex-grow">
-          <GraphArea />
+          <GraphArea initialStocks={initialStocks} hideWelcomeScreen />
         </div>
         <footer className="w-full flex flex-col justify-center items-center bg-gray-700 text-white p-2 mt-4 rounded-lg">
           <div className="flex justify-center items-center text-sm">

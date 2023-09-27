@@ -40,7 +40,13 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-export default function Graph() {
+export default function Graph({
+  hideWelcomeScreen,
+  initialStocks,
+}: {
+  hideWelcomeScreen: boolean;
+  initialStocks: [];
+}) {
   const stockData = useStockStore((state) => state.stockData);
   const googleTrendsData = useGoogleTrendsStore(
     (state) => state.googleTrendsData
@@ -48,8 +54,9 @@ export default function Graph() {
 
   let graphLineData: { time: number }[] = [];
 
+  const checkStockData = initialStocks || stockData;
   // Loop and add each data type to the chart
-  stockData.forEach((dataItem, stockDataIndex) => {
+  checkStockData.forEach((dataItem, stockDataIndex) => {
     dataItem.data.t.forEach((timestamp, timestampIndex) => {
       const existingEntry = graphLineData.find(
         (entry) => entry.time === timestamp
@@ -93,7 +100,7 @@ export default function Graph() {
     return a.time - b.time;
   });
 
-  if (graphLineData.length) {
+  if (graphLineData.length || hideWelcomeScreen) {
     return (
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
