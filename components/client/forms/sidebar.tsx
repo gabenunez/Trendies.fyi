@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { useState, useEffect } from "react";
-import { InitialStocksType } from "../../../app/page";
+import { StocksType } from "../../../app/page";
 import { useStockStore } from "@/stores/stocks";
 
 type LineType = {
@@ -21,9 +21,9 @@ type LineType = {
 };
 
 export default function SidebarForm({
-  initialStocks,
+  serverFetchedStocks,
 }: {
-  initialStocks: InitialStocksType;
+  serverFetchedStocks: StocksType;
 }) {
   const stockData = useStockStore((state) => state.stockData);
   const setStockData = useStockStore((state) => state.setStockData);
@@ -31,8 +31,8 @@ export default function SidebarForm({
   function fetchInitialStocks() {
     let stocks: LineType[] = [];
 
-    if (initialStocks?.length) {
-      stocks = initialStocks?.map((stock) => {
+    if (serverFetchedStocks?.length) {
+      stocks = serverFetchedStocks?.map((stock) => {
         return {
           component: StockSymbolInput,
           id: crypto.randomUUID(),
@@ -64,7 +64,7 @@ export default function SidebarForm({
   }
 
   useEffect(() => {
-    setStockData([...stockData, ...initialStocks]);
+    setStockData([...stockData, ...serverFetchedStocks]);
   }, []);
 
   return (

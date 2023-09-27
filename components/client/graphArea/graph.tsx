@@ -9,6 +9,7 @@ import {
 } from "recharts";
 import { useStockStore } from "@/stores/stocks";
 import { useGoogleTrendsStore } from "@/stores/googleTrends";
+import { StocksType } from "@/app/page";
 
 function unixTimestampToDate(unixTimestamp: number): string {
   const milliseconds = unixTimestamp * 1000;
@@ -41,11 +42,9 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function Graph({
-  hideWelcomeScreen,
-  initialStocks,
+  serverFetchedStocks,
 }: {
-  hideWelcomeScreen: boolean;
-  initialStocks: [];
+  serverFetchedStocks: StocksType;
 }) {
   const stockData = useStockStore((state) => state.stockData);
   const googleTrendsData = useGoogleTrendsStore(
@@ -54,9 +53,11 @@ export default function Graph({
 
   let graphLineData: { time: number }[] = [];
 
-  const checkStockData = stockData || initialStocks;
+  // Default to SSR stock prop if waiting on state
+  const relevantStockData = stockData || serverFetchedStocks;
+  console.log(relevantStockData);
   // Loop and add each data type to the chart
-  checkStockData.forEach((dataItem, stockDataIndex) => {
+  relevantStockData.forEach((dataItem, stockDataIndex) => {
     dataItem.data.t.forEach((timestamp, timestampIndex) => {
       const existingEntry = graphLineData.find(
         (entry) => entry.time === timestamp
@@ -100,7 +101,7 @@ export default function Graph({
     return a.time - b.time;
   });
 
-  if (graphLineData.length || hideWelcomeScreen) {
+  if (graphLineData.length) {
     return (
       <ResponsiveContainer width="100%" height="100%">
         <LineChart

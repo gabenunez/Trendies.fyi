@@ -1,18 +1,12 @@
 "use client";
 
 import Graph from "./graph";
+import { StocksType } from "@/app/page";
 
 export default function GraphArea({
-  hideWelcomeScreen,
-  initialStocks,
+  serverFetchedStocks,
 }: {
-  hideWelcomeScreen: boolean;
-  initialStocks: [];
+  serverFetchedStocks: StocksType;
 }) {
-  return (
-    <Graph
-      initialStocks={initialStocks}
-      hideWelcomeScreen={hideWelcomeScreen}
-    />
-  );
+  return <Graph serverFetchedStocks={serverFetchedStocks} />;
 }

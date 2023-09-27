@@ -4,15 +4,14 @@ import GraphArea from "@/components/client/graphArea";
 import QueryManager from "@/components/client/queryManager";
 import { fetchStockCandles } from "./api/stocks/candles/route";
 
-export type InitialStocksType = { searchTerm: string; data: {} }[];
+export type StocksType = { searchTerm: string; data: {} }[];
 
 export default async function Homepage({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  let initialStocks: InitialStocksType = [];
-  let hideWelcomeScreen: boolean = false;
+  let serverFetchedStocks: StocksType = [];
 
   if (searchParams.stocks) {
     let arrOfStocks: string[] = [];
@@ -25,13 +24,12 @@ export default async function Homepage({
 
     const allStockData = await Promise.all(arrOfStockPromises);
 
-    initialStocks = allStockData.map((stockData, index) => {
+    serverFetchedStocks = allStockData.map((stockData, index) => {
       return {
         searchTerm: arrOfStocks[index],
         data: stockData,
       };
     });
-    hideWelcomeScreen = true;
   }
 
   return (
@@ -43,11 +41,11 @@ export default async function Homepage({
         <QueryManager />
         <Separator className="my-4" />
 
-        <SidebarForm initialStocks={initialStocks} />
+        <SidebarForm serverFetchedStocks={serverFetchedStocks} />
       </aside>
       <div className="w-full h-full md:w-2/3 p-4 flex flex-col">
         <div className="h-full border rounded-lg border-gray-600 flex-grow">
-          <GraphArea initialStocks={initialStocks} hideWelcomeScreen />
+          <GraphArea serverFetchedStocks={serverFetchedStocks} />
         </div>
         <footer className="w-full flex flex-col justify-center items-center bg-gray-700 text-white p-2 mt-4 rounded-lg">
           <div className="flex justify-center items-center text-sm">
