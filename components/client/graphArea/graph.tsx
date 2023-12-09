@@ -46,7 +46,7 @@ export default function Graph({
 }: {
   serverFetchedStocks: StocksType;
 }) {
-  const stockData = useStockStore((state) => state.stockData);
+  // const stockData = useStockStore((state) => state.stockData);
   const googleTrendsData = useGoogleTrendsStore(
     (state) => state.googleTrendsData
   );
@@ -118,7 +118,7 @@ export default function Graph({
           <Tooltip content={<CustomTooltip />} formatter={formatInfo} />
           <Legend />
 
-          {stockData.map((item, index) => {
+          {serverFetchedStocks.map((item, index) => {
             return (
               <Line
                 key={item.searchTerm + "-stock"}

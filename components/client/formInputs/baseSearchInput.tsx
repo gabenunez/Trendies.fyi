@@ -79,7 +79,10 @@ export default function BaseSearchInput({
 
         {inputFinalized ? (
           <Button
-            onClick={() => handleDelete(inputText)}
+            onClick={(e) => {
+              e.preventDefault();
+              handleDelete(inputText);
+            }}
             className="ml-1 px-1"
             variant="ghost"
           >

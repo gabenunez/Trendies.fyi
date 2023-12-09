@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useStockStore } from "@/stores/stocks";
 import BaseSearchInput from "./baseSearchInput";
 import { RiStockFill } from "react-icons/ri";
+import { useSearchParams, useRouter } from "next/navigation";
+import { createUrl } from "../../../lib/utils";
 
 export const fetchStockData = async (inputText: string) => {
   const data = await fetch("/api/stocks/candles", {
@@ -25,28 +26,48 @@ export const fetchStockData = async (inputText: string) => {
 };
 
 export default function StockSymbolInput({
-  handleRemoveLine,
   initialValue,
 }: {
-  handleRemoveLine: () => void;
   initialValue: string;
   initialData: {};
 }) {
+  const router = useRouter();
   const [inputFinalized, setInputFinalized] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const stockData = useStockStore((state) => state.stockData);
-  const setStockData = useStockStore((state) => state.setStockData);
+  const searchParams = useSearchParams();
+  const newParams = new URLSearchParams(searchParams.toString());
 
   const handleSubmission = async (inputText: string) => {
-    setStockData([...stockData, { searchTerm: inputText }]);
+    const currentStocks = newParams.get("stocks");
+    let arrOfStocks: string[] = [];
+
+    if (currentStocks) {
+      arrOfStocks = currentStocks?.split(",");
+    }
+
+    if (inputText) {
+      arrOfStocks = [...arrOfStocks, inputText];
+      const newQueryParm = arrOfStocks?.join(",");
+      newParams.set("stocks", newQueryParm);
+    }
+
+    router.push(createUrl("/", newParams));
+    setInputFinalized(true);
   };
 
   function removeFromList(inputText: string) {
-    // Ideally we get here
-    setStockData(stockData.filter((data) => data.searchTerm !== inputText));
+    const currentStocks = newParams.get("stocks")?.split(",");
 
-    handleRemoveLine();
+    const filteredStocks = currentStocks
+      ?.filter((item) => item !== inputText)
+      .join(",");
+
+    if (filteredStocks) {
+      newParams.set("stocks", filteredStocks);
+    }
+
+    router.push(createUrl("/", newParams));
   }
 
   return (

@@ -21,6 +21,7 @@ export default async function Homepage({
     if (typeof searchParams.stocks === "string") {
       arrOfStocks = searchParams.stocks.split(",");
     }
+
     const arrOfStockPromises = arrOfStocks.map((symbol) =>
       fetchStockCandles(symbol)
     );
