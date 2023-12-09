@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import {
-  fetchFinnhubAPI,
+  fetchStockDataFromAPI,
   UserTriggeredError,
   calculatePercentages,
 } from "@/lib/utils";
@@ -14,23 +14,46 @@ function getUnixTimestampWithSubtraction(days: number): number {
 }
 
 export async function fetchStockCandles(stockSymbol: string) {
-  const currentUnixTime = getUnixTimestampWithSubtraction(0);
-  const thirtyDaysAgoUnixTime = getUnixTimestampWithSubtraction(30);
-
-  // Fetches the past 30 days of trading
-  const res = await fetchFinnhubAPI(
-    `/stock/candle?symbol=${stockSymbol}&resolution=D&from=${thirtyDaysAgoUnixTime}&to=${currentUnixTime}`
-  );
+  // Fetches past 100 days of trading
+  const res = await fetchStockDataFromAPI(stockSymbol);
 
   const data = await res.json();
 
-  if (data?.s === "no_data") {
+  if (data?.["Error Message"]) {
     throw new UserTriggeredError("No stock data found");
   }
 
-  data.averages = calculatePercentages(data.c);
+  const cleansedReturndData: {
+    timestamps: number[];
+    prices: number[];
+    averages: number[];
+  } = {
+    timestamps: [],
+    prices: [],
+    averages: [],
+  };
 
-  return data;
+  const dailyData = data["Time Series (Daily)"];
+
+  const thirtyDaysAgoTimestamp = getUnixTimestampWithSubtraction(30);
+
+  cleansedReturndData.timestamps = Object.keys(dailyData).map((date) =>
+    Math.floor(new Date(date).getTime() / 1000)
+  );
+
+  cleansedReturndData.timestamps = cleansedReturndData.timestamps.filter(
+    (timestamp) => thirtyDaysAgoTimestamp < timestamp
+  );
+
+  cleansedReturndData.prices = Object.values(dailyData)
+    .slice(0, cleansedReturndData.timestamps.length)
+    .map((candle) => candle["4. close"]);
+
+  cleansedReturndData.averages = calculatePercentages(
+    cleansedReturndData.prices
+  );
+
+  return cleansedReturndData;
 }
 
 type StockRequest = {

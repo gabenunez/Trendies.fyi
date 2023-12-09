@@ -19,14 +19,11 @@ export async function fetchData<T>(
   return response;
 }
 
-export async function fetchFinnhubAPI(path: string, options?: RequestInit) {
-  return await fetchData("https://finnhub.io/api/v1", path, {
-    ...options,
-    headers: {
-      ...options?.headers,
-      "X-Finnhub-Token": process.env.FINNHUB_API_KEY ?? "",
-    },
-  });
+export async function fetchStockDataFromAPI(stockSymbol: string) {
+  return await fetchData(
+    `https://www.alphavantage.co`,
+    `/query?function=TIME_SERIES_DAILY&symbol=${stockSymbol}&apikey=${process.env.ALPHA_ADVANTAGE_API_KEY}&outputSize=compact`
+  );
 }
 
 export class UserTriggeredError extends Error {}

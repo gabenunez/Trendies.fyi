@@ -55,7 +55,7 @@ export default function Graph({
 
   // Loop and add each data type to the chart
   serverFetchedStocks.forEach((dataItem, stockDataIndex) => {
-    dataItem.data.t.forEach((timestamp, timestampIndex) => {
+    dataItem.data.timestamps.forEach((timestamp, timestampIndex) => {
       const existingEntry = graphLineData.find(
         (entry) => entry.time === timestamp
       );

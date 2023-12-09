@@ -4,7 +4,10 @@ import GraphArea from "@/components/client/graphArea";
 import QueryManager from "@/components/client/queryManager";
 import { fetchStockCandles } from "./api/stocks/candles/route";
 
-export type StocksType = { searchTerm: string; data: {} }[];
+export type StocksType = {
+  searchTerm: string;
+  data: { timestamps: number[]; averages: number[] };
+}[];
 
 export default async function Homepage({
   searchParams,
