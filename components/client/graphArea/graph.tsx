@@ -46,7 +46,6 @@ export default function Graph({
 }: {
   serverFetchedStocks: StocksType;
 }) {
-  console.log(serverFetchedStocks);
   const stockData = useStockStore((state) => state.stockData);
   const googleTrendsData = useGoogleTrendsStore(
     (state) => state.googleTrendsData
