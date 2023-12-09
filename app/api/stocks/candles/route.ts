@@ -35,7 +35,7 @@ export async function fetchStockCandles(stockSymbol: string) {
 
   const dailyData = data["Time Series (Daily)"];
 
-  const thirtyDaysAgoTimestamp = getUnixTimestampWithSubtraction(30);
+  const thirtyDaysAgoTimestamp = getUnixTimestampWithSubtraction(31);
 
   cleansedReturndData.timestamps = Object.keys(dailyData).map((date) =>
     Math.floor(new Date(date).getTime() / 1000)
