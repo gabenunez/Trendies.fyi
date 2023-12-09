@@ -15,9 +15,9 @@ function unixTimestampToDate(unixTimestamp: number): string {
   const milliseconds = unixTimestamp * 1000;
   const date = new Date(milliseconds);
 
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
 
   return `${month}-${day}`;
 }
@@ -46,6 +46,7 @@ export default function Graph({
 }: {
   serverFetchedStocks: StocksType;
 }) {
+  console.log(serverFetchedStocks);
   const stockData = useStockStore((state) => state.stockData);
   const googleTrendsData = useGoogleTrendsStore(
     (state) => state.googleTrendsData
