@@ -5,8 +5,14 @@ import { StocksType } from "@/app/page";
 
 export default function GraphArea({
   serverFetchedStocks,
+  serverFetchedTrends,
 }: {
   serverFetchedStocks: StocksType;
 }) {
-  return <Graph serverFetchedStocks={serverFetchedStocks} />;
+  return (
+    <Graph
+      serverFetchedTrends={serverFetchedTrends}
+      serverFetchedStocks={serverFetchedStocks}
+    />
+  );
 }

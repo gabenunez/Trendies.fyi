@@ -1,17 +1,12 @@
-import { NextResponse } from "next/server";
 import { UserTriggeredError } from "@/lib/utils";
 import googleTrends from "google-trends-api";
 
-type TrendsRequest = {
+export async function fetchGoogleTrendsData({
+  trendsQuery,
+}: {
   trendsQuery: string;
-};
-
-export async function POST(request: Request) {
+}) {
   try {
-    const req: TrendsRequest = await request.json();
-
-    const { trendsQuery } = req;
-
     if (!trendsQuery) {
       throw new UserTriggeredError("Missing trendsQuery");
     }
@@ -55,19 +50,13 @@ export async function POST(request: Request) {
       })
     );
 
-    return NextResponse.json({ data: cleanedData });
+    return { trendsQuery, data: cleanedData };
   } catch (error: Error | UserTriggeredError | unknown) {
     if (error instanceof UserTriggeredError) {
-      return NextResponse.json(
-        { error: true, message: error.message },
-        { status: 400 }
-      );
+      return { error: true, message: error.message };
     }
 
     console.error(error);
-    return NextResponse.json(
-      { error: "Unexpected error... Unable to fetch Google Trend!" },
-      { status: 500 }
-    );
+    return { error: "Unexpected error... Unable to fetch Google Trend!" };
   }
 }

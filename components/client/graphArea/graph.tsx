@@ -7,8 +7,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { useStockStore } from "@/stores/stocks";
-import { useGoogleTrendsStore } from "@/stores/googleTrends";
+
 import { StocksType } from "@/app/page";
 
 function unixTimestampToDate(unixTimestamp: number): string {
@@ -43,14 +42,10 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 export default function Graph({
   serverFetchedStocks,
+  serverFetchedTrends,
 }: {
   serverFetchedStocks: StocksType;
 }) {
-  // const stockData = useStockStore((state) => state.stockData);
-  const googleTrendsData = useGoogleTrendsStore(
-    (state) => state.googleTrendsData
-  );
-
   let graphLineData: { time: number }[] = [];
 
   // Loop and add each data type to the chart
@@ -74,7 +69,7 @@ export default function Graph({
     });
   });
 
-  googleTrendsData.forEach((trendData, index) => {
+  serverFetchedTrends.forEach((trendData, index) => {
     trendData.data.forEach((item) => {
       const existingEntry = graphLineData.find(
         (entry) => entry.time === item.timestamp
@@ -133,7 +128,7 @@ export default function Graph({
             );
           })}
 
-          {googleTrendsData.map((trendSearch, index) => (
+          {serverFetchedTrends.map((trendSearch, index) => (
             <Line
               key={trendSearch.searchTerm + "-GT"} // GT in case that stocks have the same key
               name={`GT: ${trendSearch.searchTerm}`}

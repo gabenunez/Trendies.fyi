@@ -3,6 +3,8 @@ import Sidebar from "@/components/client/forms/sidebar";
 import GraphArea from "@/components/client/graphArea";
 import QueryManager from "@/components/client/queryManager";
 import { fetchStockCandles } from "./server/stocks";
+import { fetchGoogleTrendsData } from "./server/google-trends";
+import { splitParamData } from "../lib/utils";
 
 export type StocksType = {
   searchTerm: string;
@@ -15,11 +17,14 @@ export default async function Homepage({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   let serverFetchedStocks: StocksType = [];
+  let serverFetchedTrends = [];
 
   if (searchParams.stocks) {
     let arrOfStocks: string[] = [];
     if (typeof searchParams.stocks === "string") {
-      arrOfStocks = searchParams.stocks.split(",");
+      arrOfStocks = splitParamData({
+        paramData: searchParams.stocks,
+      });
     }
 
     const arrOfStockPromises = arrOfStocks.map((symbol) =>
@@ -36,6 +41,27 @@ export default async function Homepage({
     });
   }
 
+  if (searchParams.trends) {
+    if (typeof searchParams.trends === "string") {
+      const googleTrendsQueries = splitParamData({
+        paramData: searchParams.trends,
+      });
+
+      const arrOfTrendsPromises = googleTrendsQueries.map((query) =>
+        fetchGoogleTrendsData({ trendsQuery: query })
+      );
+
+      const allTrendsData = await Promise.all(arrOfTrendsPromises);
+
+      serverFetchedTrends = allTrendsData.map((item) => {
+        return {
+          searchTerm: item.trendsQuery,
+          data: item.data,
+        };
+      });
+    }
+  }
+
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-800 text-white">
       <aside className="w-full md:w-1/3 p-4 border-r border-gray-600">
@@ -49,7 +75,10 @@ export default async function Homepage({
       </aside>
       <div className="w-full h-full md:w-2/3 p-4 flex flex-col">
         <div className="h-full border rounded-lg border-gray-600 flex-grow">
-          <GraphArea serverFetchedStocks={serverFetchedStocks} />
+          <GraphArea
+            serverFetchedStocks={serverFetchedStocks}
+            serverFetchedTrends={serverFetchedTrends}
+          />
         </div>
         <footer className="w-full flex flex-col justify-center items-center bg-gray-700 text-white p-2 mt-4 rounded-lg">
           <div className="flex justify-center items-center text-sm">

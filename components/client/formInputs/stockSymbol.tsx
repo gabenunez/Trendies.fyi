@@ -10,25 +10,6 @@ import {
   removeItemFromQueryParm,
 } from "@/lib/utils";
 
-export const fetchStockData = async (inputText: string) => {
-  const data = await fetch("/api/stocks/candles", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ stockSymbol: inputText }),
-  });
-
-  const parsedJS0N = await data.json();
-
-  // Handle 400/500 Errors
-  if (!data.ok) {
-    throw parsedJS0N;
-  }
-
-  return parsedJS0N.data;
-};
-
 export default function StockSymbolInput({
   initialValue,
 }: {

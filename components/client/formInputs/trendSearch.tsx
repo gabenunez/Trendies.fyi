@@ -1,70 +1,59 @@
 "use client";
 
 import { useState } from "react";
-import { useGoogleTrendsStore } from "@/stores/googleTrends";
 import { HiTrendingUp } from "react-icons/hi";
 import BaseSearchInput from "./baseSearchInput";
+import { useSearchParams, useRouter } from "next/navigation";
+import {
+  createUrl,
+  addItemToQueryParm,
+  removeItemFromQueryParm,
+} from "@/lib/utils";
 
 export default function TrendsSearchInput({
-  handleRemoveLine,
+  initialValue,
 }: {
-  handleRemoveLine: () => void;
+  initialValue: string;
+  initialData: {};
 }) {
+  const router = useRouter();
   const [inputFinalized, setInputFinalized] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const googleTrendsData = useGoogleTrendsStore(
-    (state) => state.googleTrendsData
-  );
-
-  const setGoogleTrendsData = useGoogleTrendsStore(
-    (state) => state.setGoogleTrendsData
-  );
-
-  const fetchGoogleTrendsData = async (inputText: string) => {
-    const data = await fetch("/api/google-trends", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ trendsQuery: inputText }),
-    });
-
-    const parsedJS0N = await data.json();
-
-    // Handle 400/500 Errors
-    if (!data.ok) {
-      throw parsedJS0N;
-    }
-
-    return parsedJS0N.data;
-  };
+  const searchParams = useSearchParams();
+  const newParams = new URLSearchParams(searchParams.toString());
 
   const handleSubmission = async (inputText: string) => {
-    setInputFinalized(true);
-    try {
-      const fetchedStockData = await fetchGoogleTrendsData(inputText);
+    const addedItemQueryParams = addItemToQueryParm({
+      params: newParams,
+      paramKey: "trends",
+      newItem: inputText,
+    });
 
-      setGoogleTrendsData([
-        ...googleTrendsData,
-        { searchTerm: inputText, data: fetchedStockData },
-      ]);
-    } catch (error) {
-      setInputFinalized(false);
-      if (error?.message) {
-        setErrorMessage(error?.message);
-      } else {
-        setErrorMessage("Unable to fetch Trends data. Please try again later.");
-      }
-    }
+    const updatedQueryParams = removeItemFromQueryParm({
+      params: addedItemQueryParams,
+      paramKey: "addNew",
+      itemToDelete: "trends",
+    });
+
+    router.replace(createUrl("/", updatedQueryParams));
+    setInputFinalized(true);
   };
 
   function removeFromList(inputText: string) {
-    setGoogleTrendsData(
-      googleTrendsData.filter((trendData) => trendData.searchTerm !== inputText)
-    );
+    const currentStocks = newParams.get("trends")?.split(",");
 
-    handleRemoveLine();
+    const filteredStocks = currentStocks
+      ?.filter((item) => item !== inputText)
+      .join(",");
+
+    if (filteredStocks) {
+      newParams.set("trends", filteredStocks);
+    } else {
+      newParams.delete("trends");
+    }
+
+    router.replace(createUrl("/", newParams));
   }
 
   return (
@@ -73,11 +62,12 @@ export default function TrendsSearchInput({
       label="Google Trends Query"
       placeholder="Enter Google Trends Query"
       icon={HiTrendingUp}
-      inputFinalized={inputFinalized}
+      inputFinalized={Boolean(initialValue || inputFinalized)}
       handleSubmission={handleSubmission}
       handleDelete={removeFromList}
       errorMessage={errorMessage}
       setErrorMessage={setErrorMessage}
+      initialValue={initialValue}
     />
   );
 }
