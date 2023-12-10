@@ -45,10 +45,7 @@ export default async function Homepage({
         <QueryManager />
         <Separator className="my-4" />
 
-        <Sidebar
-          searchParams={searchParams}
-          serverFetchedStocks={serverFetchedStocks}
-        />
+        <Sidebar searchParams={searchParams} />
       </aside>
       <div className="w-full h-full md:w-2/3 p-4 flex flex-col">
         <div className="h-full border rounded-lg border-gray-600 flex-grow">

@@ -2,7 +2,6 @@
 
 import StockSymbolInput from "@/components/client/formInputs/stockSymbol";
 import TrendsSearchInput from "@/components/client/formInputs/trendSearch";
-import { StocksType } from "@/app/page";
 import Dropdown from "./dropdown";
 import { splitParamData } from "@/lib/utils";
 import { LineTypes } from "./types";
