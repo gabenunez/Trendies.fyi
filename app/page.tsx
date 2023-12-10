@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import Sidebar from "@/components/client/forms/sidebar";
 import GraphArea from "@/components/client/graphArea";
 import QueryManager from "@/components/client/queryManager";
-import { fetchStockCandles } from "./api/stocks/candles/route";
+import { fetchStockCandles } from "./server/stocks";
 
 export type StocksType = {
   searchTerm: string;
