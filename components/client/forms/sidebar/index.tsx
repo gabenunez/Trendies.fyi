@@ -14,53 +14,55 @@ type FormInputType = {
   initialData?: {};
 };
 
+const componentMappings: { [K in LineTypes]: JSX.Element } = {
+  stocks: StockSymbolInput,
+  trends: TrendsSearchInput,
+};
+
+const componentKeys = Object.keys(componentMappings);
+
 export default async function SidebarForm({
-  serverFetchedStocks,
   searchParams,
 }: {
-  serverFetchedStocks: StocksType;
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   let displayedInputs: FormInputType[] = [];
 
-  if (serverFetchedStocks?.length) {
-    displayedInputs = serverFetchedStocks?.map((stock) => {
-      return {
-        component: StockSymbolInput,
-        id: crypto.randomUUID(),
-        initialValue: stock.searchTerm,
-      };
-    });
-  }
-
-  // Logic for adding new inputs
-  if (searchParams.addNew) {
-    if (typeof searchParams.addNew === "string") {
-      const arrOfNewFields = splitParamData({
-        paramData: searchParams.addNew,
-      });
-
-      // Overcome the typeerror, refactor later?
-      const arrOfEditableLineTypes: LineTypes[] = arrOfNewFields.map(
-        (item) => item as LineTypes
-      );
-
-      if (arrOfEditableLineTypes.length) {
-        const componentMappings: { [K in LineTypes]: JSX.Element } = {
-          stocks: StockSymbolInput,
-          trends: TrendsSearchInput,
-        };
-
-        const newEditableFields = arrOfEditableLineTypes.map((item) => {
-          return {
-            component: componentMappings[item],
-            id: crypto.randomUUID(),
-          };
-        });
-
-        displayedInputs = [...displayedInputs, ...newEditableFields];
+  if (searchParams) {
+    const filteredSearchParamKeys = Object.keys(searchParams).filter(
+      (key: string) => {
+        if (key === "addNew") return true;
+        return componentKeys.includes(key);
       }
-    }
+    );
+
+    filteredSearchParamKeys?.forEach((key: string) => {
+      if (typeof searchParams[key] === "string") {
+        const terms = splitParamData({
+          paramData: searchParams[key] as string,
+        });
+        let newComponents = [];
+
+        if (key === "addNew") {
+          newComponents = terms.map((term) => {
+            return {
+              component: componentMappings[term as LineTypes],
+              id: crypto.randomUUID(),
+            };
+          });
+        } else {
+          newComponents = terms.map((term) => {
+            return {
+              component: componentMappings[key as LineTypes],
+              id: crypto.randomUUID(),
+              initialValue: term,
+            };
+          });
+        }
+
+        displayedInputs = [...displayedInputs, ...newComponents];
+      }
+    });
   }
 
   return (
