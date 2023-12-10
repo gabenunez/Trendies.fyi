@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import SidebarForm from "@/components/client/forms/sidebar";
+import Sidebar from "@/components/client/forms/sidebar";
 import GraphArea from "@/components/client/graphArea";
 import QueryManager from "@/components/client/queryManager";
 import { fetchStockCandles } from "./api/stocks/candles/route";
@@ -45,7 +45,10 @@ export default async function Homepage({
         <QueryManager />
         <Separator className="my-4" />
 
-        <SidebarForm serverFetchedStocks={serverFetchedStocks} />
+        <Sidebar
+          searchParams={searchParams}
+          serverFetchedStocks={serverFetchedStocks}
+        />
       </aside>
       <div className="w-full h-full md:w-2/3 p-4 flex flex-col">
         <div className="h-full border rounded-lg border-gray-600 flex-grow">

@@ -51,3 +51,71 @@ export const createUrl = (
 
   return `${pathname}${queryString}`;
 };
+
+export const splitParamData = ({ paramData }: { paramData: string | null }) => {
+  let arrOfItemsInParam: string[] = [];
+
+  if (paramData) {
+    arrOfItemsInParam = paramData?.split(",");
+  }
+
+  return arrOfItemsInParam;
+};
+
+export const getParamData = ({
+  params,
+  paramKey,
+}: {
+  params: URLSearchParams | ReadonlyURLSearchParams;
+  paramKey: string;
+}) => {
+  const paramData = params.get(paramKey);
+
+  const arrOfItemsInParam = splitParamData({ paramData });
+
+  return arrOfItemsInParam;
+};
+
+export const addItemToQueryParm = ({
+  params,
+  paramKey,
+  newItem,
+}: {
+  params: URLSearchParams | ReadonlyURLSearchParams;
+  paramKey: string;
+  newItem: string;
+}) => {
+  let arrOfItemsInParam = getParamData({ params, paramKey });
+
+  if (newItem) {
+    arrOfItemsInParam = [...arrOfItemsInParam, newItem];
+    const updatedQueryData = arrOfItemsInParam?.join(",");
+    params.set(paramKey, updatedQueryData);
+  }
+
+  return params;
+};
+
+export const removeItemFromQueryParm = ({
+  params,
+  paramKey,
+  itemToDelete,
+}: {
+  params: URLSearchParams | ReadonlyURLSearchParams;
+  paramKey: string;
+  itemToDelete: string;
+}) => {
+  let arrOfItemsInParam = getParamData({ params, paramKey });
+
+  const filteredParamData = arrOfItemsInParam
+    ?.filter((item) => item !== itemToDelete)
+    .join(",");
+
+  if (filteredParamData) {
+    params.set(paramKey, filteredParamData);
+  } else {
+    params.delete(paramKey);
+  }
+
+  return params;
+};

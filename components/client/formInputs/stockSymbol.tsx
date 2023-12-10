@@ -4,7 +4,11 @@ import { useState } from "react";
 import BaseSearchInput from "./baseSearchInput";
 import { RiStockFill } from "react-icons/ri";
 import { useSearchParams, useRouter } from "next/navigation";
-import { createUrl } from "../../../lib/utils";
+import {
+  createUrl,
+  addItemToQueryParm,
+  removeItemFromQueryParm,
+} from "@/lib/utils";
 
 export const fetchStockData = async (inputText: string) => {
   const data = await fetch("/api/stocks/candles", {
@@ -39,20 +43,19 @@ export default function StockSymbolInput({
   const newParams = new URLSearchParams(searchParams.toString());
 
   const handleSubmission = async (inputText: string) => {
-    const currentStocks = newParams.get("stocks");
-    let arrOfStocks: string[] = [];
+    const addedItemQueryParams = addItemToQueryParm({
+      params: newParams,
+      paramKey: "stocks",
+      newItem: inputText,
+    });
 
-    if (currentStocks) {
-      arrOfStocks = currentStocks?.split(",");
-    }
+    const updatedQueryParams = removeItemFromQueryParm({
+      params: addedItemQueryParams,
+      paramKey: "addNew",
+      itemToDelete: "stocks",
+    });
 
-    if (inputText) {
-      arrOfStocks = [...arrOfStocks, inputText];
-      const newQueryParm = arrOfStocks?.join(",");
-      newParams.set("stocks", newQueryParm);
-    }
-
-    router.push(createUrl("/", newParams));
+    router.replace(createUrl("/", updatedQueryParams));
     setInputFinalized(true);
   };
 
@@ -65,9 +68,11 @@ export default function StockSymbolInput({
 
     if (filteredStocks) {
       newParams.set("stocks", filteredStocks);
+    } else {
+      newParams.delete("stocks");
     }
 
-    router.push(createUrl("/", newParams));
+    router.replace(createUrl("/", newParams));
   }
 
   return (
