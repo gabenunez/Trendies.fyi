@@ -107,11 +107,15 @@ export const removeItemFromQueryParm = ({
 }) => {
   let arrOfItemsInParam = getParamData({ params, paramKey });
 
-  const filteredParamData = arrOfItemsInParam
-    ?.filter((item) => item !== itemToDelete)
-    .join(",");
+  const foundIndex = arrOfItemsInParam.indexOf(itemToDelete);
 
-  if (filteredParamData) {
+  if (foundIndex !== -1) {
+    arrOfItemsInParam.splice(foundIndex, 1);
+  }
+
+  const filteredParamData = arrOfItemsInParam.join(",");
+
+  if (arrOfItemsInParam) {
     params.set(paramKey, filteredParamData);
   } else {
     params.delete(paramKey);
