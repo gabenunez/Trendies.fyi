@@ -1,6 +1,6 @@
 # MVP Items
 
-1. Fix so that search area always appears first
+1. DONE - Fix so that search area always appears last
 2. Designated areas for stonks, trends? Or make it so these modules can co-exist in the order they're created?
 3. OG images
 4. Proper error handling

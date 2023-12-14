@@ -13,20 +13,22 @@ type FormInputType = {
   initialData?: {};
 };
 
-const componentMappings: { [K in LineTypes]: JSX.Element } = {
-  stocks: StockSymbolInput,
-  trends: TrendsSearchInput,
-};
-
-const componentKeys = Object.keys(componentMappings);
-
 export default async function SidebarForm({
   searchParams,
+  stockErrors,
+  trendsErrors,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
+  const componentMappings: { [K in LineTypes]: { component: JSX.Element } } = {
+    stocks: { component: StockSymbolInput, errors: stockErrors },
+    trends: { component: TrendsSearchInput, errors: trendsErrors },
+  };
+  console.log(trendsErrors);
+  const componentKeys = Object.keys(componentMappings);
+
   let displayedInputs: FormInputType[] = [];
-  let addNewComponents: FormInputType[] = [];
+  let addNewInputs: FormInputType[] = [];
 
   if (searchParams) {
     const filteredSearchParamKeys = Object.keys(searchParams).filter(
@@ -46,22 +48,23 @@ export default async function SidebarForm({
         if (key === "addNew") {
           newComponents = terms.map((term) => {
             return {
-              component: componentMappings[term as LineTypes],
+              component: componentMappings[term as LineTypes].component,
               id: crypto.randomUUID(),
             };
           });
         } else {
           newComponents = terms.map((term) => {
             return {
-              component: componentMappings[key as LineTypes],
+              component: componentMappings[key as LineTypes].component,
               id: crypto.randomUUID(),
               initialValue: term,
+              errors: componentMappings[key as LineTypes]?.errors,
             };
           });
         }
 
         if (key === "addNew") {
-          return (addNewComponents = newComponents);
+          return (addNewInputs = newComponents);
         }
 
         displayedInputs = [...displayedInputs, ...newComponents];
@@ -69,19 +72,26 @@ export default async function SidebarForm({
     });
   }
 
-  displayedInputs = [...displayedInputs, ...addNewComponents];
+  displayedInputs = [...displayedInputs, ...addNewInputs];
 
   return (
     <form className="space-y-4">
       <Dropdown />
 
       {displayedInputs.map((line) => {
-        const { component: Component, id, initialValue, initialData } = line;
+        const {
+          component: Component,
+          id,
+          initialValue,
+          initialData,
+          errors,
+        } = line;
         return (
           <Component
             key={id}
             initialValue={initialValue}
             initialData={initialData}
+            errors={errors}
           />
         );
       })}

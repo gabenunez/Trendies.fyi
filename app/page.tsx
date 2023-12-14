@@ -8,7 +8,12 @@ import { splitParamData } from "../lib/utils";
 
 export type StocksType = {
   searchTerm: string;
-  data: { timestamps: number[]; averages: number[] };
+  data: { error?: string; timestamps: number[]; averages: number[] };
+}[];
+
+export type TrendsType = {
+  searchTerm: string;
+  data: { error?: string; value: number; timestamp: number };
 }[];
 
 export default async function Homepage({
@@ -17,7 +22,7 @@ export default async function Homepage({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   let serverFetchedStocks: StocksType = [];
-  let serverFetchedTrends = [];
+  let serverFetchedTrends: TrendsType = [];
 
   if (searchParams.stocks) {
     let arrOfStocks: string[] = [];
@@ -54,9 +59,11 @@ export default async function Homepage({
       const allTrendsData = await Promise.all(arrOfTrendsPromises);
 
       serverFetchedTrends = allTrendsData.map((item) => {
+        console.log(item);
         return {
           searchTerm: item.trendsQuery,
           data: item.data,
+          error: item?.error,
         };
       });
     }
@@ -71,13 +78,21 @@ export default async function Homepage({
         <QueryManager />
         <Separator className="my-4" />
 
-        <Sidebar searchParams={searchParams} />
+        <Sidebar
+          searchParams={searchParams}
+          stockErrors={serverFetchedStocks?.filter((stock) => stock.data.error)}
+          trendsErrors={serverFetchedTrends?.filter((trend) => trend.error)}
+        />
       </aside>
       <div className="w-full h-full md:w-2/3 p-4 flex flex-col">
         <div className="h-full border rounded-lg border-gray-600 flex-grow">
           <GraphArea
-            serverFetchedStocks={serverFetchedStocks}
-            serverFetchedTrends={serverFetchedTrends}
+            serverFetchedStocks={serverFetchedStocks?.filter(
+              (stock) => !stock.data.error
+            )}
+            serverFetchedTrends={serverFetchedTrends?.filter(
+              (trend) => !trend.error
+            )}
           />
         </div>
         <footer className="w-full flex flex-col justify-center items-center bg-gray-700 text-white p-2 mt-4 rounded-lg">

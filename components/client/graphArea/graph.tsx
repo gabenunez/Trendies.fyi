@@ -8,7 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { StocksType } from "@/app/page";
+import { StocksType, TrendsType } from "@/app/page";
 
 function unixTimestampToDate(unixTimestamp: number): string {
   const milliseconds = unixTimestamp * 1000;
@@ -45,6 +45,7 @@ export default function Graph({
   serverFetchedTrends,
 }: {
   serverFetchedStocks: StocksType;
+  serverFetchedTrends: TrendsType;
 }) {
   let graphLineData: { time: number }[] = [];
 

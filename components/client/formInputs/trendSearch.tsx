@@ -12,18 +12,28 @@ import {
 
 export default function TrendsSearchInput({
   initialValue,
+  errors,
 }: {
   initialValue: string;
-  initialData: {};
 }) {
   const router = useRouter();
   const [inputFinalized, setInputFinalized] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+
+  const initErrorMessage = errors?.find(
+    (error) => error.searchTerm === initialValue
+  )?.error;
+
+  const [errorMessage, setErrorMessage] = useState(initErrorMessage);
 
   const searchParams = useSearchParams();
   const newParams = new URLSearchParams(searchParams.toString());
 
   const handleSubmission = async (inputText: string) => {
+    if (!inputText) {
+      setErrorMessage("Please enter Google Trends query.");
+      return;
+    }
+
     const addedItemQueryParams = addItemToQueryParm({
       params: newParams,
       paramKey: "trends",

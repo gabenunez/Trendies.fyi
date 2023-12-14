@@ -7,10 +7,6 @@ export async function fetchGoogleTrendsData({
   trendsQuery: string;
 }) {
   try {
-    if (!trendsQuery) {
-      throw new UserTriggeredError("Missing trendsQuery");
-    }
-
     let trendsData;
 
     try {
@@ -31,9 +27,10 @@ export async function fetchGoogleTrendsData({
     const parsedJSON = JSON.parse(trendsData);
     const narrowedDownData = parsedJSON.default.timelineData;
     if (!narrowedDownData?.length) {
-      throw new UserTriggeredError(
-        "No trends data found. Please try another search."
-      );
+      return {
+        error: "No trends data found. Please try another search.",
+        trendsQuery,
+      };
     }
     const cleanedData = narrowedDownData.map(
       ({
@@ -52,11 +49,10 @@ export async function fetchGoogleTrendsData({
 
     return { trendsQuery, data: cleanedData };
   } catch (error: Error | UserTriggeredError | unknown) {
-    if (error instanceof UserTriggeredError) {
-      return { error: true, message: error.message };
-    }
-
     console.error(error);
-    return { error: "Unexpected error... Unable to fetch Google Trend!" };
+    return {
+      error: "Unexpected error... Unable to fetch Google Trend!",
+      trendsQuery,
+    };
   }
 }
