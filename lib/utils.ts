@@ -24,7 +24,7 @@ export async function internalFetchRequest<T>(path: string, body?: {}) {
   const response = await fetch(process.env.VERCEL_URL + path, {
     method: body && "POST",
     headers: {
-      "internal-secret": process.env.svtSecret ?? "",
+      "internal-secret": process.env.SVT_INTERNAL_REQUEST_SECRET,
     },
     body: JSON.stringify(body),
     next: { revalidate: 21600 }, // Default cache retention is 6 hours
