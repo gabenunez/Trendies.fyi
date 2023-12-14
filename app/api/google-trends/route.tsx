@@ -1,11 +1,17 @@
 import { UserTriggeredError } from "@/lib/utils";
 import googleTrends from "google-trends-api";
 
-export async function fetchGoogleTrendsData({
-  trendsQuery,
-}: {
-  trendsQuery: string;
-}) {
+export async function POST(request: Request) {
+  const req = await request.json();
+  const { trendsQuery } = req;
+
+  if (!trendsQuery) {
+    return Response.json({
+      error: "Missing trendsQuery",
+      trendsQuery,
+    });
+  }
+
   try {
     let trendsData;
 
@@ -27,10 +33,10 @@ export async function fetchGoogleTrendsData({
     const parsedJSON = JSON.parse(trendsData);
     const narrowedDownData = parsedJSON.default.timelineData;
     if (!narrowedDownData?.length) {
-      return {
+      return Response.json({
         error: "No trends data found. Please try another search.",
         trendsQuery,
-      };
+      });
     }
     const cleanedData = narrowedDownData.map(
       ({
@@ -47,12 +53,12 @@ export async function fetchGoogleTrendsData({
       })
     );
 
-    return { trendsQuery, data: cleanedData };
+    return Response.json({ trendsQuery, data: cleanedData });
   } catch (error: Error | UserTriggeredError | unknown) {
     console.error(error);
-    return {
+    return Response.json({
       error: "Unexpected error... Unable to fetch Google Trend!",
       trendsQuery,
-    };
+    });
   }
 }

@@ -24,7 +24,7 @@ export default async function SidebarForm({
     stocks: { component: StockSymbolInput, errors: stockErrors },
     trends: { component: TrendsSearchInput, errors: trendsErrors },
   };
-  console.log(trendsErrors);
+
   const componentKeys = Object.keys(componentMappings);
 
   let displayedInputs: FormInputType[] = [];

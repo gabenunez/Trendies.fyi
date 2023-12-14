@@ -2,9 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import Sidebar from "@/components/client/forms/sidebar";
 import GraphArea from "@/components/client/graphArea";
 import QueryManager from "@/components/client/queryManager";
-import { fetchStockCandles } from "./server/stocks";
-import { fetchGoogleTrendsData } from "./server/google-trends";
-import { splitParamData } from "../lib/utils";
+import { splitParamData, internalFetchRequest } from "../lib/utils";
 
 export type StocksType = {
   searchTerm: string;
@@ -33,7 +31,9 @@ export default async function Homepage({
     }
 
     const arrOfStockPromises = arrOfStocks.map((symbol) =>
-      fetchStockCandles(symbol)
+      internalFetchRequest("/api/stocks", {
+        stockSymbol: symbol,
+      })
     );
 
     const allStockData = await Promise.all(arrOfStockPromises);
@@ -53,13 +53,14 @@ export default async function Homepage({
       });
 
       const arrOfTrendsPromises = googleTrendsQueries.map((query) =>
-        fetchGoogleTrendsData({ trendsQuery: query })
+        internalFetchRequest("/api/google-trends", {
+          trendsQuery: query,
+        })
       );
 
       const allTrendsData = await Promise.all(arrOfTrendsPromises);
 
       serverFetchedTrends = allTrendsData.map((item) => {
-        console.log(item);
         return {
           searchTerm: item.trendsQuery,
           data: item.data,

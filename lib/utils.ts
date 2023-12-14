@@ -20,6 +20,23 @@ export async function fetchData<T>(
   return response;
 }
 
+export async function internalFetchRequest<T>(path: string, body?: {}) {
+  const response = await fetch(process.env.VERCEL_URL + path, {
+    method: body && "POST",
+    headers: {
+      "internal-secret": process.env.svtSecret ?? "",
+    },
+    body: JSON.stringify(body),
+    next: { revalidate: 21600 }, // Default cache retention is 6 hours
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch data from ${path}`);
+  }
+
+  return response.json();
+}
+
 export async function fetchStockDataFromAPI(stockSymbol: string) {
   return await fetchData(
     `https://www.alphavantage.co`,

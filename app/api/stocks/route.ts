@@ -1,8 +1,4 @@
-import {
-  fetchStockDataFromAPI,
-  UserTriggeredError,
-  calculatePercentages,
-} from "@/lib/utils";
+import { fetchStockDataFromAPI, calculatePercentages } from "@/lib/utils";
 
 function getUnixTimestampWithSubtraction(days: number): number {
   const millisecondsPerDay = 24 * 60 * 60 * 1000;
@@ -12,7 +8,16 @@ function getUnixTimestampWithSubtraction(days: number): number {
   return Math.floor(targetTimestamp / 1000);
 }
 
-export async function fetchStockCandles(stockSymbol: string) {
+export async function POST(request: Request) {
+  const req = await request.json();
+  const { stockSymbol } = req;
+
+  if (!stockSymbol) {
+    return Response.json({
+      error: "Missing stockSymbol",
+    });
+  }
+
   try {
     // Fetches past 100 days of trading
     const res = await fetchStockDataFromAPI(stockSymbol);
@@ -20,7 +25,7 @@ export async function fetchStockCandles(stockSymbol: string) {
     const data = await res.json();
 
     if (data?.["Error Message"]) {
-      return { error: "No stock data found." };
+      return Response.json({ error: "No stock data found." });
     }
 
     const cleansedReturndData: {
@@ -53,9 +58,11 @@ export async function fetchStockCandles(stockSymbol: string) {
       cleansedReturndData.prices
     );
 
-    return cleansedReturndData;
+    return Response.json(cleansedReturndData);
   } catch (err) {
     console.error(err);
-    return { error: "Sorry, something's wrong with the server :(" };
+    return Response.json({
+      error: "Sorry, something's wrong with the server :(",
+    });
   }
 }
