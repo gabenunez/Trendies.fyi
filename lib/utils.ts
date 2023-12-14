@@ -20,8 +20,17 @@ export async function fetchData<T>(
   return response;
 }
 
+export function getCurrentURL() {
+  const { LOCAL_URL, VERCEL_URL } = process.env;
+
+  if (LOCAL_URL) return LOCAL_URL;
+  return "https://" + VERCEL_URL;
+}
+
 export async function internalFetchRequest<T>(path: string, body?: {}) {
-  const response = await fetch(process.env.VERCEL_URL + path, {
+  const currentUrl = getCurrentURL();
+
+  const response = await fetch(currentUrl + path, {
     method: body && "POST",
     headers: {
       "internal-secret": process.env.SVT_INTERNAL_REQUEST_SECRET,
