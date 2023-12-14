@@ -47,7 +47,7 @@ export default function StockSymbolInput({
       ?.filter((item) => item !== inputText)
       .join(",");
 
-    if (filteredStocks) {
+    if (filteredStocks?.length) {
       newParams.set("stocks", filteredStocks);
     } else {
       newParams.delete("stocks");

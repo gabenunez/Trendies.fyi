@@ -65,15 +65,34 @@ export const splitParamData = ({ paramData }: { paramData: string | null }) => {
 export const getParamData = ({
   params,
   paramKey,
+  returnDefaultParams,
 }: {
   params: URLSearchParams | ReadonlyURLSearchParams;
   paramKey: string;
+  returnDefaultParams?: boolean;
 }) => {
   const paramData = params.get(paramKey);
+
+  // Quick return all default param data
+  if (returnDefaultParams) return paramData;
 
   const arrOfItemsInParam = splitParamData({ paramData });
 
   return arrOfItemsInParam;
+};
+
+// Function that makes sure the "addNew" param is always at the end (for rendering)
+const ensureParamOrder = (
+  params: URLSearchParams | ReadonlyURLSearchParams
+) => {
+  const addNewParamData = params.get("addNew");
+
+  if (addNewParamData) {
+    params.delete("addNew");
+    params.set("addNew", addNewParamData);
+  }
+
+  return params;
 };
 
 export const addItemToQueryParm = ({
@@ -93,6 +112,7 @@ export const addItemToQueryParm = ({
     params.set(paramKey, updatedQueryData);
   }
 
+  params = ensureParamOrder(params);
   return params;
 };
 
@@ -113,13 +133,14 @@ export const removeItemFromQueryParm = ({
     arrOfItemsInParam.splice(foundIndex, 1);
   }
 
-  const filteredParamData = arrOfItemsInParam.join(",");
-
-  if (arrOfItemsInParam) {
+  if (arrOfItemsInParam?.length) {
+    const filteredParamData = arrOfItemsInParam.join(",");
     params.set(paramKey, filteredParamData);
   } else {
     params.delete(paramKey);
   }
+
+  params = ensureParamOrder(params);
 
   return params;
 };

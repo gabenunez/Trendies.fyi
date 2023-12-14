@@ -26,6 +26,7 @@ export default async function SidebarForm({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   let displayedInputs: FormInputType[] = [];
+  let addNewComponents: FormInputType[] = [];
 
   if (searchParams) {
     const filteredSearchParamKeys = Object.keys(searchParams).filter(
@@ -59,10 +60,16 @@ export default async function SidebarForm({
           });
         }
 
+        if (key === "addNew") {
+          return (addNewComponents = newComponents);
+        }
+
         displayedInputs = [...displayedInputs, ...newComponents];
       }
     });
   }
+
+  displayedInputs = [...displayedInputs, ...addNewComponents];
 
   return (
     <form className="space-y-4">

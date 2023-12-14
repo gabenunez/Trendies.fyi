@@ -47,7 +47,7 @@ export default function TrendsSearchInput({
       ?.filter((item) => item !== inputText)
       .join(",");
 
-    if (filteredStocks) {
+    if (filteredStocks?.length) {
       newParams.set("trends", filteredStocks);
     } else {
       newParams.delete("trends");
