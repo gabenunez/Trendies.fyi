@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { createUrl, addItemToQueryParm } from "@/lib/utils";
+import { createUrl, addItemToQueryParm, isInQueryParam } from "@/lib/utils";
 import { LineTypes } from "./types";
 
 export default function Dropdown() {
@@ -17,6 +17,10 @@ export default function Dropdown() {
 
   const searchParams = useSearchParams();
   const newParams = new URLSearchParams(searchParams.toString());
+
+  const lineIsAlreadyActive = (item: string) => {
+    return isInQueryParam({ params: newParams, paramKey: "addNew", item });
+  };
 
   function handleAddLine(dataType: LineTypes) {
     const updatedParams = addItemToQueryParm({
@@ -54,11 +58,17 @@ export default function Dropdown() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuItem onClick={() => handleAddLine("stocks")}>
-          Add Stock Ticker
+        <DropdownMenuItem
+          disabled={lineIsAlreadyActive("stocks")}
+          onClick={() => handleAddLine("stocks")}
+        >
+          Add Stock Ticker {lineIsAlreadyActive("stocks") && "(Active)"}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleAddLine("trends")}>
-          Add Google Trend
+        <DropdownMenuItem
+          disabled={lineIsAlreadyActive("trends")}
+          onClick={() => handleAddLine("trends")}
+        >
+          Add Google Trend {lineIsAlreadyActive("trends") && "(Active)"}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

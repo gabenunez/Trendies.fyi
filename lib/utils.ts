@@ -170,3 +170,19 @@ export const removeItemFromQueryParm = ({
 
   return params;
 };
+
+export const isInQueryParam = ({
+  params,
+  paramKey,
+  item,
+}: {
+  params: URLSearchParams | ReadonlyURLSearchParams;
+  paramKey: string;
+  item: string;
+}) => {
+  const paramData = getParamData({ params, paramKey });
+  if (Array.isArray(paramData) && paramData?.length) {
+    return paramData.includes(item);
+  }
+  return false;
+};

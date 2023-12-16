@@ -16,7 +16,7 @@ type BaseSearchInputPropsType = {
   placeholder: string;
   icon: IconType;
   handleSubmission: (inputText: string) => void;
-  handleDelete: (inputText: string) => void;
+  handleDelete: (inputText: string | null) => void;
   inputFinalized: boolean;
   errorMessage: string;
   setErrorMessage: (inputText: string) => void;
@@ -77,22 +77,22 @@ export default function BaseSearchInput({
           aria-invalid={errorMessage}
         />
 
-        {inputFinalized ? (
-          <Button
-            onClick={(e) => {
-              e.preventDefault();
-              handleDelete(inputText);
-            }}
-            className="ml-1 px-1"
-            variant="ghost"
-          >
-            <CiCircleRemove size="1.8em" />
-          </Button>
-        ) : (
+        {!inputFinalized && (
           <Button className="ml-1 px-1" variant="ghost" onClick={handleSubmit}>
             <CiSearch size="1.8em" />
           </Button>
         )}
+
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            handleDelete(!inputFinalized ? null : inputText);
+          }}
+          className="ml-1 px-1"
+          variant="ghost"
+        >
+          <CiCircleRemove size="1.8em" />
+        </Button>
       </div>
       {errorMessage && (
         <p className="text-red-500 text-xs italic ml-8 mt-1 flex items-center">

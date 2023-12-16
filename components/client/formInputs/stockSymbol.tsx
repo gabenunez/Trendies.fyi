@@ -56,20 +56,23 @@ export default function StockSymbolInput({
     setInputFinalized(true);
   };
 
-  function removeFromList(inputText: string) {
-    const currentStocks = newParams.get("stocks")?.split(",");
-
-    const filteredStocks = currentStocks
-      ?.filter((item) => item !== inputText)
-      .join(",");
-
-    if (filteredStocks?.length) {
-      newParams.set("stocks", filteredStocks);
+  function removeFromList(inputText: string | null) {
+    let updatedQueryParams;
+    if (inputText === null) {
+      updatedQueryParams = removeItemFromQueryParm({
+        params: newParams,
+        paramKey: "addNew",
+        itemToDelete: "stocks",
+      });
     } else {
-      newParams.delete("stocks");
+      updatedQueryParams = removeItemFromQueryParm({
+        params: newParams,
+        paramKey: "stocks",
+        itemToDelete: inputText,
+      });
     }
 
-    router.replace(createUrl("/", newParams));
+    router.replace(createUrl("/", updatedQueryParams));
   }
 
   return (

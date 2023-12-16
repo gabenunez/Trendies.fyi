@@ -51,19 +51,23 @@ export default function TrendsSearchInput({
   };
 
   function removeFromList(inputText: string) {
-    const currentStocks = newParams.get("trends")?.split(",");
+    let updatedQueryParams;
 
-    const filteredStocks = currentStocks
-      ?.filter((item) => item !== inputText)
-      .join(",");
-
-    if (filteredStocks?.length) {
-      newParams.set("trends", filteredStocks);
+    if (inputText === null) {
+      updatedQueryParams = removeItemFromQueryParm({
+        params: newParams,
+        paramKey: "addNew",
+        itemToDelete: "trends",
+      });
     } else {
-      newParams.delete("trends");
+      updatedQueryParams = removeItemFromQueryParm({
+        params: newParams,
+        paramKey: "trends",
+        itemToDelete: inputText,
+      });
     }
 
-    router.replace(createUrl("/", newParams));
+    router.replace(createUrl("/", updatedQueryParams));
   }
 
   return (
