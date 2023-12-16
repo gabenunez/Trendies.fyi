@@ -9,6 +9,7 @@ import { IconType } from "react-icons";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { CiCircleRemove, CiSearch } from "react-icons/ci";
 import { MouseEvent, KeyboardEvent } from "react";
+import { cn } from "@/lib/utils";
 
 type BaseSearchInputPropsType = {
   htmlId: string;
@@ -88,7 +89,7 @@ export default function BaseSearchInput({
             e.preventDefault();
             handleDelete(!inputFinalized ? null : inputText);
           }}
-          className="ml-1 px-1"
+          className={cn("px-1", inputFinalized ? "ml-1" : "")}
           variant="ghost"
         >
           <CiCircleRemove size="1.8em" />
