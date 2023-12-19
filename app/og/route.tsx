@@ -16,20 +16,22 @@ function base64ToBinary(base64: string) {
 }
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const urlParam = searchParams.get("url");
+  const requestURL = new URL(request.url);
 
-  if (!urlParam) {
-    return new ImageResponse(<>Visit with &quot;?username=vercel&quot;</>, {
-      width: 1200,
-      height: 630,
+  const params = new URLSearchParams(request.url);
+
+  const ogModeDetected = params?.get("ogMode");
+
+  if (ogModeDetected) {
+    return Response.json({
+      error: "OG Mode Detected",
     });
   }
 
   const data = await internalFetchRequest(
     `/api/og`,
     {
-      url: urlParam,
+      url: requestURL,
     },
     1
   );

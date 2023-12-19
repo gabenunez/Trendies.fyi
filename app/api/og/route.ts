@@ -1,5 +1,6 @@
 import { type NextRequest } from "next/server";
 import captureWebsite from "capture-website";
+import { getCurrentURL } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
   const req = await request.json();
@@ -11,8 +12,11 @@ export async function POST(request: NextRequest) {
     });
   }
 
+  const formattedUrl =
+    getCurrentURL() + "?" + url.split("?")[1] + "&ogMode=true";
+
   try {
-    const base64Screenshot = await captureWebsite.base64(decodeURI(url), {
+    const base64Screenshot = await captureWebsite.base64(formattedUrl, {
       waitForElement: "#graph-area",
       element: "#graph-area",
       timeout: 5,

@@ -26,14 +26,18 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const constructedSearchParams = constructSearchParams(searchParams);
   const baseUrl = getCurrentURL();
+  const isOGmode = searchParams?.ogMode;
+
+  if (isOGmode) {
+    return {};
+  }
 
   return {
     metadataBase: new URL(baseUrl),
     openGraph: {
-      images:
-        baseUrl +
-        "/og?url=" +
-        encodeURI(baseUrl + "/" + constructedSearchParams),
+      images: isOGmode
+        ? undefined
+        : baseUrl + "/og?" + encodeURI(constructedSearchParams),
     },
   };
 }
