@@ -2,8 +2,8 @@ import { type NextRequest } from "next/server";
 import captureWebsite from "capture-website";
 import { getCurrentURL } from "@/lib/utils";
 import { chromium as devChromium } from "playwright";
-import chromium from "chrome-aws-lambda";
-import playwright from "playwright-core";
+const chromium = require("chrome-aws-lambda");
+const playwright = require("playwright-core");
 
 export const fetchGraphScreenshotBase64 = async (url: string) => {
   let browser;
