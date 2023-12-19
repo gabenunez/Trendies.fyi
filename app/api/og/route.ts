@@ -2,8 +2,8 @@ import { type NextRequest } from "next/server";
 import captureWebsite from "capture-website";
 import { getCurrentURL } from "@/lib/utils";
 import { chromium as devChromium } from "playwright";
-import chromium from "chrome-aws-lambda";
 import playwright from "playwright-core";
+import chromium from "@sparticuz/chromium";
 
 export const fetchGraphScreenshotBase64 = async (url: string) => {
   let browser;
@@ -13,7 +13,7 @@ export const fetchGraphScreenshotBase64 = async (url: string) => {
   } else {
     browser = await playwright.chromium.launch({
       args: chromium.args,
-      executablePath: await chromium.executablePath,
+      executablePath: await chromium.executablePath(),
       headless: chromium.headless,
     });
   }
