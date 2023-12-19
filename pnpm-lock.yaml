@@ -20,9 +20,6 @@ dependencies:
   '@radix-ui/react-slot':
     specifier: ^1.0.2
     version: 1.0.2(@types/react@18.2.43)(react@18.2.0)
-  '@sparticuz/chromium':
-    specifier: ^119.0.2
-    version: 119.0.2
   '@types/node':
     specifier: 20.10.4
     version: 20.10.4
@@ -965,16 +962,6 @@ packages:
 
   /@rushstack/eslint-patch@1.6.0:
     resolution: {integrity: sha512-2/U3GXA6YiPYQDLGwtGlnNgKYBSwCFIHf8Y9LUY5VATHdtbLlU0Y1R3QoBnT0aB4qv/BEiVVsj7LJXoQCgJ2vA==}
-    dev: false
-
-  /@sparticuz/chromium@119.0.2:
-    resolution: {integrity: sha512-VB6tHW13YpQ7HqyhKG1KU8Z1RIb/kfHMg8j/4ft5rk8mMvEm2YkBYFCHnj+yb0P/RPLcdgX3+VC58GuJilOtww==}
-    engines: {node: '>= 16'}
-    dependencies:
-      follow-redirects: 1.15.3
-      tar-fs: 3.0.4
-    transitivePeerDependencies:
-      - debug
     dev: false
 
   /@swc/helpers@0.5.2:
@@ -2382,16 +2369,6 @@ packages:
 
   /flatted@3.2.9:
     resolution: {integrity: sha512-36yxDn5H7OFZQla0/jFJmbIKTdZAQHngCedGxiMmpNfEZM0sdEeT+WczLQrjK6D7o2aiyLYDnkw0R3JK0Qv1RQ==}
-    dev: false
-
-  /follow-redirects@1.15.3:
-    resolution: {integrity: sha512-1VzOtuEM8pC9SFU1E+8KfTjZyMztRsgEfwQl44z8A25uy13jSzTj6dyK2Df52iV0vgHCfBwLhDWevLn95w5v6Q==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
     dev: false
 
   /for-each@0.3.3:
