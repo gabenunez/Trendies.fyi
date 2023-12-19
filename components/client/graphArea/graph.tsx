@@ -7,6 +7,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { cn } from "@/lib/utils";
 
 import { StocksType, TrendsType } from "@/app/page";
 
@@ -43,9 +44,11 @@ const CustomTooltip = ({ active, payload, label }) => {
 export default function Graph({
   serverFetchedStocks,
   serverFetchedTrends,
+  ogMode,
 }: {
   serverFetchedStocks: StocksType;
   serverFetchedTrends: TrendsType;
+  ogMode: boolean;
 }) {
   let graphLineData: { time: number }[] = [];
 
@@ -96,23 +99,23 @@ export default function Graph({
 
   if (graphLineData.length) {
     return (
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer id="graph-area" width="100%" height="100%">
         <LineChart
           width={500}
           height={300}
           data={graphLineData}
           margin={{
             top: 0,
-            right: 5,
-            left: 5,
-            bottom: 5,
+            right: !ogMode ? 5 : 0,
+            left: !ogMode ? 5 : 0,
+            bottom: !ogMode ? 5 : 0,
           }}
         >
-          <XAxis dataKey="date" />
-          <YAxis unit="%" />
+          <XAxis hide={ogMode} dataKey="date" />
+          <YAxis hide={ogMode} unit="%" />
 
           <Tooltip content={<CustomTooltip />} formatter={formatInfo} />
-          <Legend />
+          {!ogMode && <Legend />}
 
           {serverFetchedStocks.map((item, index) => {
             return (
@@ -125,6 +128,7 @@ export default function Graph({
                 activeDot={{ r: 8 }}
                 legendType="circle"
                 connectNulls={true}
+                isAnimationActive={!ogMode}
               />
             );
           })}
@@ -139,6 +143,7 @@ export default function Graph({
               activeDot={{ r: 8 }}
               connectNulls={true}
               legendType="circle"
+              isAnimationActive={!ogMode}
             />
           ))}
         </LineChart>

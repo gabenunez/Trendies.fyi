@@ -27,7 +27,11 @@ export function getCurrentURL() {
   return "https://" + VERCEL_URL;
 }
 
-export async function internalFetchRequest<T>(path: string, body?: {}) {
+export async function internalFetchRequest<T>(
+  path: string,
+  body?: {},
+  revalidate?: number
+) {
   const currentUrl = getCurrentURL();
 
   const response = await fetch(currentUrl + path, {
@@ -36,7 +40,7 @@ export async function internalFetchRequest<T>(path: string, body?: {}) {
       "internal-secret": process.env.SVT_INTERNAL_REQUEST_SECRET,
     },
     body: JSON.stringify(body),
-    next: { revalidate: 21600 }, // Default cache retention is 6 hours
+    next: { revalidate: revalidate || 21600 }, // Default cache retention is 6 hours
   });
 
   if (!response.ok) {
@@ -185,4 +189,15 @@ export const isInQueryParam = ({
     return paramData.includes(item);
   }
   return false;
+};
+
+export const constructSearchParams = (searchParams: {
+  [key: string]: string | number;
+}): string => {
+  return Object.entries(searchParams)
+    .map(
+      ([key, value]) =>
+        `${encodeURIComponent(key)}=${encodeURIComponent(value.toString())}`
+    )
+    .join("&");
 };

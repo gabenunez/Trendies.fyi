@@ -2,7 +2,13 @@ import { Separator } from "@/components/ui/separator";
 import Sidebar from "@/components/client/forms/sidebar";
 import GraphArea from "@/components/client/graphArea";
 import QueryManager from "@/components/client/queryManager";
-import { splitParamData, internalFetchRequest } from "../lib/utils";
+import {
+  splitParamData,
+  internalFetchRequest,
+  getCurrentURL,
+  constructSearchParams,
+} from "../lib/utils";
+import { Metadata, ResolvingMetadata } from "next";
 
 export type StocksType = {
   searchTerm: string;
@@ -14,6 +20,24 @@ export type TrendsType = {
   data: { error?: string; value: number; timestamp: number };
 }[];
 
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const constructedSearchParams = constructSearchParams(searchParams);
+  const baseUrl = getCurrentURL();
+
+  return {
+    metadataBase: new URL(baseUrl),
+    openGraph: {
+      images:
+        baseUrl +
+        "/og?url=" +
+        encodeURI(baseUrl + "/" + constructedSearchParams),
+    },
+  };
+}
+
 export default async function Homepage({
   searchParams,
 }: {
@@ -21,6 +45,7 @@ export default async function Homepage({
 }) {
   let serverFetchedStocks: StocksType = [];
   let serverFetchedTrends: TrendsType = [];
+  const ogMode = searchParams.ogMode;
 
   if (searchParams.stocks) {
     let arrOfStocks: string[] = [];
@@ -94,6 +119,7 @@ export default async function Homepage({
             serverFetchedTrends={serverFetchedTrends?.filter(
               (trend) => !trend.error
             )}
+            ogMode={Boolean(ogMode)}
           />
         </div>
         <footer className="w-full flex flex-col justify-center items-center bg-gray-700 text-white p-2 mt-4 rounded-lg">
