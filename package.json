@@ -29,7 +29,6 @@
     "lucide-react": "^0.294.0",
     "next": "14.0.4",
     "playwright": "^1.40.1",
-    "playwright-core": "^1.40.1",
     "postcss": "8.4.32",
     "react": "18.2.0",
     "react-dom": "18.2.0",

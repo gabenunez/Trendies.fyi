@@ -65,9 +65,6 @@ dependencies:
   playwright:
     specifier: ^1.40.1
     version: 1.40.1
-  playwright-core:
-    specifier: ^1.40.1
-    version: 1.40.1
   postcss:
     specifier: 8.4.32
     version: 8.4.32
