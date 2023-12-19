@@ -2,7 +2,7 @@ import { type NextRequest } from "next/server";
 import captureWebsite from "capture-website";
 import { getCurrentURL } from "@/lib/utils";
 import { chromium as devChromium } from "playwright";
-const chromium = require("chrome-aws-lambda");
+const chromium = require("@sparticuz/chromium-min");
 const playwright = require("playwright-core");
 
 export const fetchGraphScreenshotBase64 = async (url: string) => {
@@ -13,7 +13,9 @@ export const fetchGraphScreenshotBase64 = async (url: string) => {
   } else {
     browser = await playwright.chromium.launch({
       args: chromium.args,
-      executablePath: await chromium.executablePath,
+      executablePath: await chromium.executablePath(
+        `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`
+      ),
       headless: chromium.headless,
     });
   }
