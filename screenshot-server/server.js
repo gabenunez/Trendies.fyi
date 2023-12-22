@@ -8,6 +8,14 @@ app.use(express.json());
 app.post("/", async (req, res) => {
   const { url } = req.body;
 
+  if (
+    req.header("internal-secret") !== process.env.SVT_INTERNAL_REQUEST_SECRET
+  ) {
+    return res
+      .status(401)
+      .json({ error: "Sorry, this is an invitation only kinda party." });
+  }
+
   try {
     // Launch the browser and open a new blank page
     const browser = await puppeteer.launch({ headless: "new" });
@@ -17,7 +25,10 @@ app.post("/", async (req, res) => {
     await page.goto(url);
 
     // Set screen size
-    await page.setViewport({ width: 1830, height: 830 });
+    await page.setViewport({ width: 1851, height: 698 });
+
+    // Apply styling
+    await page.addStyleTag({ content: ".rounded-lg {border-radius: 0;}" });
 
     // Select graph area
     const element = await page.waitForSelector("#graph-area");
@@ -36,4 +47,6 @@ app.post("/", async (req, res) => {
 
 const port = process.env.PORT || 1818;
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, () =>
+  console.log(`Screenshot server listening on port ${port}`)
+);
