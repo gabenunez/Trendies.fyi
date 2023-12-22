@@ -14,6 +14,9 @@ dependencies:
   express:
     specifier: ^4.18.2
     version: 4.18.2
+  puppeteer:
+    specifier: ^21.6.1
+    version: 21.6.1
 
 packages:
 
