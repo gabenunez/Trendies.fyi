@@ -37,10 +37,37 @@ export async function internalFetchRequest<T>(
   const response = await fetch(currentUrl + path, {
     method: body && "POST",
     headers: {
+      "Content-Type": "application/json",
       "internal-secret": process.env.SVT_INTERNAL_REQUEST_SECRET,
     },
     body: JSON.stringify(body),
     next: { revalidate: revalidate || 21600 }, // Default cache retention is 6 hours
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch data from ${path}`);
+  }
+
+  return response.json();
+}
+
+export async function privateFetchRequest<T>({
+  path,
+  body,
+}: {
+  path: string;
+  body: {};
+}) {
+  const currentUrl = getCurrentURL();
+
+  const response = await fetch(path, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "internal-secret": process.env.SVT_INTERNAL_REQUEST_SECRET,
+    },
+    body: JSON.stringify(body),
+    next: { revalidate: 1 }, // Default cache retention is 6 hours
   });
 
   if (!response.ok) {

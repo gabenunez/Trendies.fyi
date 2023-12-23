@@ -36,7 +36,8 @@ export async function GET(request: Request) {
     1
   );
 
-  const convertedData = base64ToBinary(data);
+  const convertedGraphImage = base64ToBinary(data);
+
   return new ImageResponse(
     (
       <div
@@ -52,7 +53,7 @@ export async function GET(request: Request) {
           alignItems: "center",
         }}
       >
-        <img width="1200" height="630" src={convertedData} />
+        <img width="1200" height="630" src={convertedGraphImage} />
       </div>
     ),
     {

@@ -1,6 +1,5 @@
 import { type NextRequest } from "next/server";
-import captureWebsite from "capture-website";
-import { getCurrentURL } from "@/lib/utils";
+import { getCurrentURL, internalFetchRequest } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
   const req = await request.json();
@@ -16,14 +15,15 @@ export async function POST(request: NextRequest) {
     getCurrentURL() + "?" + url.split("?")[1] + "&ogMode=true";
 
   try {
-    const base64Image = await captureWebsite.base64(formattedUrl, {
-      waitForElement: "#graph-area",
-      element: "#graph-area",
-      timeout: 5,
-      styles: [".rounded-lg {border-radius: 0;}"],
-    });
+    const base64Image = await internalFetchRequest(
+      "/api/screenshot",
+      {
+        url: formattedUrl,
+      },
+      1
+    );
 
-    return Response.json(base64Image);
+    return Response.json(base64Image.image);
   } catch (err) {
     console.error(err);
     return Response.json({
