@@ -21,11 +21,11 @@ app.post("/", async (req, res) => {
     const browser = await puppeteer.launch({ headless: "new", timeout: 0 });
     const page = await browser.newPage();
 
-    // Navigate the page to a URL
-    await page.goto(url);
-
     // Set screen size
     await page.setViewport({ width: 1851, height: 698 });
+
+    // Navigate the page to a URL
+    await page.goto(url, { waitUntil: "domcontentloaded" });
 
     // Apply styling
     await page.addStyleTag({ content: ".rounded-lg {border-radius: 0;}" });
