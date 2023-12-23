@@ -18,7 +18,7 @@ app.post("/", async (req, res) => {
 
   try {
     // Launch the browser and open a new blank page
-    const browser = await puppeteer.launch({ headless: "new" });
+    const browser = await puppeteer.launch({ headless: "new", timeout: 0 });
     const page = await browser.newPage();
 
     // Navigate the page to a URL
