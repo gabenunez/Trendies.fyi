@@ -29,7 +29,7 @@ app.post("/", async (req, res) => {
     console.log("3. Viewport set");
 
     // Navigate the page to a URL
-    await page.goto(url, { waitUntil: "domcontentloaded" });
+    await page.goto(url);
     console.log("4. Navigated to URL.");
 
     // Apply styling
@@ -37,7 +37,7 @@ app.post("/", async (req, res) => {
     console.log("5. Added styling");
 
     // Select graph area
-    const element = await page.waitForSelector("#graph-area");
+    const element = await page.waitForSelector("#graph-area .recharts-wrapper");
     console.log("6. Selected graph-area element");
 
     const graphScreenshot = await element.screenshot();
