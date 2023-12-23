@@ -1,5 +1,6 @@
 import { type NextRequest } from "next/server";
 import { getCurrentURL, internalFetchRequest } from "@/lib/utils";
+export const maxDuration = 30;
 
 export async function POST(request: NextRequest) {
   const req = await request.json();
