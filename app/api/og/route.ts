@@ -18,13 +18,9 @@ export async function POST(request: NextRequest) {
     getCurrentURL() + "?" + decodedUrl.split("?")[1] + "&ogMode=true";
 
   try {
-    const base64Image = await internalFetchRequest(
-      "/api/screenshot",
-      {
-        url: formattedUrl,
-      },
-      1
-    );
+    const base64Image = await internalFetchRequest("/api/screenshot", {
+      url: formattedUrl,
+    });
 
     return Response.json(base64Image.image);
   } catch (err) {

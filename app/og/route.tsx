@@ -31,13 +31,9 @@ export async function GET(request: Request) {
   const stocks = searchParams?.get("stocks");
   const trends = searchParams?.get("trends");
 
-  const data = await internalFetchRequest(
-    `/api/og`,
-    {
-      url: requestURL,
-    },
-    1
-  );
+  const data = await internalFetchRequest(`/api/og`, {
+    url: requestURL,
+  });
 
   const convertedGraphImage = base64ToBinary(data);
 
