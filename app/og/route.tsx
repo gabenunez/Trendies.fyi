@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { internalFetchRequest } from "@/lib/utils";
+import { url } from "inspector";
 
 export const runtime = "edge";
 
@@ -17,16 +18,18 @@ function base64ToBinary(base64: string) {
 
 export async function GET(request: Request) {
   const requestURL = new URL(request.url);
+  const { searchParams } = requestURL;
 
-  const params = new URLSearchParams(request.url);
-
-  const ogModeDetected = params?.get("ogMode");
+  const ogModeDetected = searchParams?.get("ogMode");
 
   if (ogModeDetected) {
     return Response.json({
       error: "OG Mode Detected",
     });
   }
+
+  const stocks = searchParams?.get("stocks");
+  const trends = searchParams?.get("trends");
 
   const data = await internalFetchRequest(
     `/api/og`,
@@ -43,17 +46,54 @@ export async function GET(request: Request) {
       <div
         style={{
           display: "flex",
-          fontSize: 60,
-          color: "black",
-          background: "#f6f6f6",
           width: "100%",
           height: "100%",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
+          color: "white",
         }}
       >
-        <img width="1200" height="630" src={convertedGraphImage} />
+        <img
+          src={convertedGraphImage}
+          alt="Background Image"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: " 100%",
+          }}
+        />
+
+        <div
+          style={{
+            position: "absolute",
+            display: "flex",
+            fontSize: "30px",
+            justifyContent: "center",
+            alignItems: "center",
+            background: "#3b82f575",
+            paddingLeft: "10px",
+            height: 100,
+            width: "100%",
+          }}
+        >
+          <h2>{stocks}</h2>
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            display: "flex",
+            fontSize: "30px",
+            justifyContent: "center",
+            alignItems: "center",
+            background: "#34a85375",
+            paddingLeft: "10px",
+            height: 100,
+            top: 100,
+            width: "100%",
+          }}
+        >
+          <h2>{trends}</h2>
+        </div>
       </div>
     ),
     {
