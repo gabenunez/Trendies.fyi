@@ -17,7 +17,7 @@ function base64ToBinary(base64: string) {
 }
 
 export async function GET(request: Request) {
-  const requestURL = new URL(request.url);
+  const requestURL = new URL(decodeURIComponent(request.url));
   const { searchParams } = requestURL;
 
   const ogModeDetected = searchParams?.get("ogMode");

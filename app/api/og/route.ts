@@ -12,10 +12,8 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  const decodedUrl = decodeURIComponent(url);
-  console.log("decodedUrl", decodedUrl);
   const formattedUrl =
-    getCurrentURL() + "?" + decodedUrl.split("?")[1] + "&ogMode=true";
+    getCurrentURL() + "?" + url.split("?")[1] + "&ogMode=true";
 
   try {
     const base64Image = await internalFetchRequest("/api/screenshot", {
