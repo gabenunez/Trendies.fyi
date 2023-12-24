@@ -65,80 +65,85 @@ export async function GET(request: Request) {
             flexDirection: "column",
           }}
         >
-          <div
-            style={{
-              background: "#3b82f575",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              paddingLeft: "10px",
-              width: "100vw",
-            }}
-          >
-            {/* Stocks SVG */}
-            <svg
-              style={{ flexGrow: 0, marginRight: "1em" }}
-              stroke="currentColor"
-              fill="currentColor"
-              strokeWidth="0"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              height="6em"
-              width="6em"
-            >
-              <path d="M8.00488 5.00293H11.0049V14.0029H8.00488V17.0029H6.00488V14.0029H3.00488V5.00293H6.00488V2.00293H8.00488V5.00293ZM18.0049 10.0029H21.0049V19.0029H18.0049V22.0029H16.0049V19.0029H13.0049V10.0029H16.0049V7.00293H18.0049V10.0029Z"></path>
-            </svg>
-            <h2
+          {stocks && (
+            <div
               style={{
-                fontSize: "3em",
-                flexShrink: 1,
-                marginRight: ".5em",
-                overflowWrap: "break-word",
-                lineHeight: ".9em",
+                background: "#3b82f575",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingLeft: "10px",
+                width: "100vw",
               }}
             >
-              {stocks}
-            </h2>
-          </div>
-          <div
-            style={{
-              background: "#34a85375",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100vw",
-              paddingLeft: "10px",
-            }}
-          >
-            <svg
-              style={{ flexGrow: 0, marginRight: "1em" }}
-              stroke="currentColor"
-              fill="currentColor"
-              stroke-width="0"
-              viewBox="0 0 20 20"
-              aria-hidden="true"
-              height="6em"
-              width="6em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
-            <h2
+              {/* Stocks SVG */}
+              <svg
+                style={{ flexGrow: 0, marginRight: "1em" }}
+                stroke="currentColor"
+                fill="currentColor"
+                strokeWidth="0"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                height="6em"
+                width="6em"
+              >
+                <path d="M8.00488 5.00293H11.0049V14.0029H8.00488V17.0029H6.00488V14.0029H3.00488V5.00293H6.00488V2.00293H8.00488V5.00293ZM18.0049 10.0029H21.0049V19.0029H18.0049V22.0029H16.0049V19.0029H13.0049V10.0029H16.0049V7.00293H18.0049V10.0029Z"></path>
+              </svg>
+              <h2
+                style={{
+                  fontSize: "3em",
+                  flexShrink: 1,
+                  marginRight: ".5em",
+                  overflowWrap: "break-word",
+                  lineHeight: ".9em",
+                }}
+              >
+                {stocks}
+              </h2>
+            </div>
+          )}
+
+          {trends && (
+            <div
               style={{
-                fontSize: "3em",
-                flexGrow: 1,
-                marginRight: ".5em",
-                overflowWrap: "break-word",
-                lineHeight: ".9em",
+                background: "#34a85375",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100vw",
+                paddingLeft: "10px",
               }}
             >
-              {trends}
-            </h2>
-          </div>
+              <svg
+                style={{ flexGrow: 0, marginRight: "1em" }}
+                stroke="currentColor"
+                fill="currentColor"
+                stroke-width="0"
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+                height="6em"
+                width="6em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+              <h2
+                style={{
+                  fontSize: "3em",
+                  flexGrow: 1,
+                  marginRight: ".5em",
+                  overflowWrap: "break-word",
+                  lineHeight: ".9em",
+                }}
+              >
+                {trends}
+              </h2>
+            </div>
+          )}
         </div>
       </div>
     ),
