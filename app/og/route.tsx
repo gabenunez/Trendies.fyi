@@ -88,10 +88,11 @@ export async function GET(request: Request) {
               <h2
                 style={{
                   fontSize: "3em",
-                  flexShrink: 1,
+
                   marginRight: ".5em",
                   overflowWrap: "break-word",
                   lineHeight: ".9em",
+                  flexGrow: 1,
                 }}
               >
                 {stocks}
