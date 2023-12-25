@@ -53,7 +53,7 @@ export default async function Homepage({
   let serverFetchedTrends: TrendsType = [];
   const ogMode = searchParams.ogMode;
 
-  if (!ogMode) {
+  if (!ogMode && (searchParams.stocks || searchParams.trends)) {
     const formattedUrl = decodeURIComponent(
       baseUrl + "?" + constructSearchParams(searchParams)
     );
