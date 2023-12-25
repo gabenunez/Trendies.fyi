@@ -47,6 +47,8 @@ app.post("/", async (req, res) => {
       access: "public",
       addRandomSuffix: false,
     });
+
+    console.log(data);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Unable to fetch image." });
