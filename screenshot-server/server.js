@@ -27,6 +27,7 @@ app.post("/", async (req, res) => {
     // Set screen size
     await page.setViewport({ width: 1851, height: 698 });
 
+    console.log("URL:", url);
     // Navigate the page to a URL
     await page.goto(url + "&ogMode=true");
 
