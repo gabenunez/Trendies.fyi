@@ -53,7 +53,7 @@ app.post("/", async (req, res) => {
   }
 });
 
-app.options("/", async (req, res) => {
+app.head("/", async (req, res) => {
   return res.json({ status: "We're up and running!" });
 });
 
