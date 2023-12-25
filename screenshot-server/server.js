@@ -53,6 +53,10 @@ app.post("/", async (req, res) => {
   }
 });
 
+app.options("/", async (req, res) => {
+  return res.json({ status: "We're up and running!" });
+});
+
 const port = process.env.PORT || 1818;
 
 app.listen(port, () =>
