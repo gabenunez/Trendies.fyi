@@ -20,7 +20,7 @@ export async function GET(request: Request) {
   const trends = searchParams?.get("trends")?.split(",").join(", ");
 
   const queryParams = requestURL.toString().split("og")[1];
-  console.log("OG URL", getCurrentURL() + queryParams);
+
   const encodedUrl = btoa(getCurrentURL() + queryParams);
   let imageUrl = process.env.BLOB_BASE_URL + encodedUrl + ".png";
 

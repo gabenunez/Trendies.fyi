@@ -14,7 +14,6 @@ export async function POST(request: NextRequest) {
 
   const formattedUrl = decodeURIComponent(url);
 
-  console.log("formatted URL", formattedUrl);
   try {
     await internalFetchRequest("/api/screenshot", {
       url: formattedUrl,

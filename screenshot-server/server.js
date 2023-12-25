@@ -27,7 +27,6 @@ app.post("/", async (req, res) => {
     // Set screen size
     await page.setViewport({ width: 1851, height: 698 });
 
-    console.log("URL:", url);
     // Navigate the page to a URL
     await page.goto(url + "&ogMode=true");
 
@@ -48,8 +47,6 @@ app.post("/", async (req, res) => {
       access: "public",
       addRandomSuffix: false,
     });
-
-    console.log(data);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Unable to fetch image." });
