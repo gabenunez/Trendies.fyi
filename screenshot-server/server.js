@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import puppeteer from "puppeteer";
+import { put } from "@vercel/blob";
 
 const app = express();
 app.use(express.json());
@@ -16,40 +17,36 @@ app.post("/", async (req, res) => {
       .json({ error: "Sorry, this is an invitation only kinda party." });
   }
 
-  console.log("1. Trying the following URL", url);
-
   try {
+    res.json({ status: "Processing request!" });
+
     // Launch the browser and open a new blank page
-    const browser = await puppeteer.launch({ headless: "new", timeout: 0 });
+    const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
-    console.log("2. Browser page opened");
 
     // Set screen size
     await page.setViewport({ width: 1851, height: 698 });
-    console.log("3. Viewport set");
 
     // Navigate the page to a URL
-    await page.goto(url);
-    console.log("4. Navigated to URL.");
+    await page.goto(url + "&ogMode=true");
 
     // Apply styling
     await page.addStyleTag({ content: ".rounded-lg {border-radius: 0;}" });
-    console.log("5. Added styling");
 
     // Select graph area
     const element = await page.waitForSelector("#graph-area .recharts-wrapper");
-    console.log("6. Selected graph-area element");
 
+    // Take a screenshot
     const graphScreenshot = await element.screenshot();
-    console.log("7. screenshot taken");
 
-    const base64Image = Buffer.from(graphScreenshot).toString("base64");
-    console.log("8. Screenshoy converted to base64");
-
+    // Close out the browser
     await browser.close();
-    console.log("9. browser closed");
 
-    return res.json({ image: base64Image });
+    // Add it to the blob store!
+    const data = await put(btoa(url) + ".png", graphScreenshot, {
+      access: "public",
+      addRandomSuffix: false,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Unable to fetch image." });

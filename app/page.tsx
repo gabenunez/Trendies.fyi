@@ -10,6 +10,8 @@ import {
 } from "../lib/utils";
 import { Metadata, ResolvingMetadata } from "next";
 
+const baseUrl = getCurrentURL();
+
 export type StocksType = {
   searchTerm: string;
   data: { error?: string; timestamps: number[]; averages: number[] };
@@ -25,7 +27,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const constructedSearchParams = constructSearchParams(searchParams);
-  const baseUrl = getCurrentURL();
+
   const isOGmode = searchParams?.ogMode;
 
   if (isOGmode) {
@@ -50,6 +52,15 @@ export default async function Homepage({
   let serverFetchedStocks: StocksType = [];
   let serverFetchedTrends: TrendsType = [];
   const ogMode = searchParams.ogMode;
+
+  if (!ogMode) {
+    const formattedUrl = decodeURIComponent(
+      baseUrl + "?" + constructSearchParams(searchParams)
+    );
+    internalFetchRequest("/api/og", {
+      url: formattedUrl,
+    });
+  }
 
   if (searchParams.stocks) {
     let arrOfStocks: string[] = [];

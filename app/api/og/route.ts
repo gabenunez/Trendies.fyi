@@ -12,15 +12,16 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  const formattedUrl =
-    getCurrentURL() + "?" + url.split("?")[1] + "&ogMode=true";
+  const formattedUrl = decodeURIComponent(url);
 
   try {
-    const base64Image = await internalFetchRequest("/api/screenshot", {
+    await internalFetchRequest("/api/screenshot", {
       url: formattedUrl,
     });
 
-    return Response.json(base64Image.image);
+    return Response.json({
+      success: "API call started to generate screenshot!",
+    });
   } catch (err) {
     console.error(err);
     return Response.json({
