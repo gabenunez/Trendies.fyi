@@ -51,10 +51,11 @@ app.use(express.json());
       const graphScreenshot = await cluster.execute(url);
 
       // Add it to the blob store!
-      await put(btoa(url) + ".png", graphScreenshot, {
+      const data = await put(btoa(url) + ".png", graphScreenshot, {
         access: "public",
         addRandomSuffix: false,
       });
+      console.log(data);
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: "Unable to fetch image." });
