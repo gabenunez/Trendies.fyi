@@ -17,6 +17,9 @@ dependencies:
   puppeteer:
     specifier: ^21.6.1
     version: 21.6.1
+  puppeteer-cluster:
+    specifier: ^0.23.0
+    version: 0.23.0(puppeteer@21.6.1)
 
 packages:
 
@@ -899,6 +902,17 @@ packages:
     dependencies:
       end-of-stream: 1.4.4
       once: 1.4.0
+    dev: false
+
+  /puppeteer-cluster@0.23.0(puppeteer@21.6.1):
+    resolution: {integrity: sha512-108terIWDzPrQopmoYSPd5yDoy3FGJ2dNnoGMkGYPs6xtkdhgaECwpfZkzaRToMQPZibUOz0/dSSGgPEdXEhkQ==}
+    peerDependencies:
+      puppeteer: '>=1.5.0'
+    dependencies:
+      debug: 4.3.4
+      puppeteer: 21.6.1
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /puppeteer-core@21.6.1:
