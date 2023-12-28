@@ -50,6 +50,8 @@ app.use(express.json());
 
       const graphScreenshot = await cluster.execute(url);
 
+      console.log("URL:", url);
+
       // Add it to the blob store!
       const data = await put(btoa(url) + ".png", graphScreenshot, {
         access: "public",

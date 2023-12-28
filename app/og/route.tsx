@@ -22,6 +22,9 @@ export async function GET(request: Request) {
   const queryParams = requestURL.toString().split("og")[1];
 
   const encodedUrl = btoa(getCurrentURL() + queryParams);
+
+  console.log("Encoded url:", getCurrentURL() + queryParams);
+
   let imageUrl = process.env.BLOB_BASE_URL + encodedUrl + ".png";
 
   try {
