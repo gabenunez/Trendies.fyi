@@ -49,11 +49,12 @@ app.use(express.json());
       res.json({ status: "Processing request!" });
 
       const graphScreenshot = await cluster.execute(url);
+      const paramsOnly = url.split("?")[1];
 
-      console.log("URL:", url);
+      console.log("Params only", paramsOnly);
 
       // Add it to the blob store!
-      const data = await put(btoa(url) + ".png", graphScreenshot, {
+      const data = await put(btoa(paramsOnly) + ".png", graphScreenshot, {
         access: "public",
         addRandomSuffix: false,
       });
