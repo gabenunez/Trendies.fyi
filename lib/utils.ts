@@ -24,7 +24,7 @@ export function getCurrentURL() {
   const { LOCAL_URL, VERCEL_URL } = process.env;
 
   if (LOCAL_URL) return LOCAL_URL;
-  return "https://" + VERCEL_URL;
+  return "https://stocks-vs-trends.vercel.app";
 }
 
 export async function internalFetchRequest<T>(
