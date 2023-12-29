@@ -35,12 +35,15 @@ export async function generateMetadata(
     return {};
   }
 
+  const headersList = headers();
+  const currentRequestUrl = headersList.get("x-request-url");
+
   return {
     metadataBase: new URL(baseUrl),
     openGraph: {
       images: isOGmode
         ? undefined
-        : baseUrl + "/og?" + encodeURI(constructedSearchParams),
+        : baseUrl + "/og?" + currentRequestUrl?.split("?")[1],
     },
   };
 }
