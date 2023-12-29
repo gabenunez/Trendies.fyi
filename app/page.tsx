@@ -9,8 +9,11 @@ import {
   constructSearchParams,
 } from "../lib/utils";
 import { Metadata, ResolvingMetadata } from "next";
+import { headers } from "next/headers";
 
 const baseUrl = getCurrentURL();
+const headersList = headers();
+const currentRequestUrl = headersList.get("x-request-url");
 
 export type StocksType = {
   searchTerm: string;
@@ -54,11 +57,8 @@ export default async function Homepage({
   const ogMode = searchParams.ogMode;
 
   if (!ogMode && (searchParams.stocks || searchParams.trends)) {
-    const formattedUrl = decodeURIComponent(
-      baseUrl + "?" + constructSearchParams(searchParams)
-    );
     internalFetchRequest("/api/og", {
-      url: formattedUrl,
+      url: currentRequestUrl,
     });
   }
 

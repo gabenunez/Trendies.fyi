@@ -25,6 +25,8 @@ export async function GET(request: Request) {
 
   const encodedUrl = btoa(onlyParams);
 
+  console.log("onlyParams", encodedUrl);
+
   let imageUrl = process.env.BLOB_BASE_URL + encodedUrl + ".png";
 
   try {

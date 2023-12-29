@@ -22,8 +22,6 @@ app.use(express.json());
     // Navigate the page to a URL
     await page.goto(url + "&ogMode=true");
 
-    console.log(url);
-
     // Apply styling
     await page.addStyleTag({ content: ".rounded-lg {border-radius: 0;}" });
 
@@ -53,7 +51,7 @@ app.use(express.json());
       const graphScreenshot = await cluster.execute(url);
       const paramsOnly = url.split("?")[1];
 
-      console.log("Params only", paramsOnly);
+      console.log("Encoded", btoa(paramsOnly));
 
       // Add it to the blob store!
       const data = await put(btoa(paramsOnly) + ".png", graphScreenshot, {
