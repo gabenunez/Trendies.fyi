@@ -6,7 +6,6 @@ import {
   splitParamData,
   internalFetchRequest,
   getCurrentURL,
-  constructSearchParams,
 } from "../lib/utils";
 import { Metadata, ResolvingMetadata } from "next";
 import { headers } from "next/headers";
@@ -27,8 +26,6 @@ export async function generateMetadata(
   { params, searchParams }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const constructedSearchParams = constructSearchParams(searchParams);
-
   const isOGmode = searchParams?.ogMode;
 
   if (isOGmode) {
