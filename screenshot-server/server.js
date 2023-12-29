@@ -22,6 +22,8 @@ app.use(express.json());
     // Navigate the page to a URL
     await page.goto(url + "&ogMode=true");
 
+    console.log(url);
+
     // Apply styling
     await page.addStyleTag({ content: ".rounded-lg {border-radius: 0;}" });
 

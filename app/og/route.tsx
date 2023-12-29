@@ -21,7 +21,7 @@ export async function GET(request: Request) {
 
   const queryParams = requestURL.toString().split("og")[1];
 
-  const onlyParams = queryParams.split("?")[1];
+  const onlyParams = request.url.split("?")[1];
 
   const encodedUrl = btoa(onlyParams);
 
