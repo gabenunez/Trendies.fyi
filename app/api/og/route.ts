@@ -12,11 +12,9 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  const formattedUrl = decodeURIComponent(url);
-
   try {
     await internalFetchRequest("/api/screenshot", {
-      url: formattedUrl,
+      url,
     });
 
     return Response.json({
