@@ -12,8 +12,6 @@ import { Metadata, ResolvingMetadata } from "next";
 import { headers } from "next/headers";
 
 const baseUrl = getCurrentURL();
-const headersList = headers();
-const currentRequestUrl = headersList.get("x-request-url");
 
 export type StocksType = {
   searchTerm: string;
@@ -55,6 +53,9 @@ export default async function Homepage({
   let serverFetchedStocks: StocksType = [];
   let serverFetchedTrends: TrendsType = [];
   const ogMode = searchParams.ogMode;
+
+  const headersList = headers();
+  const currentRequestUrl = headersList.get("x-request-url");
 
   if (!ogMode && (searchParams.stocks || searchParams.trends)) {
     internalFetchRequest("/api/og", {
