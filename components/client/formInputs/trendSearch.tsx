@@ -70,6 +70,22 @@ export default function TrendsSearchInput({
     router.replace(createUrl("/", updatedQueryParams));
   }
 
+  const handleAutocomplete = async (inputText: string) => {
+    const data = await fetch(
+      `/api-public/auto-complete/trends?query=${encodeURI(inputText)}`
+    );
+
+    const jsonData = await data.json();
+
+    const formattedData = jsonData.map((item) => {
+      return {
+        name: `${item.name} (${item.type})`,
+        value: item.name,
+      };
+    });
+    return formattedData;
+  };
+
   return (
     <BaseSearchInput
       htmlId="googleTrendSearch"
@@ -82,6 +98,7 @@ export default function TrendsSearchInput({
       errorMessage={errorMessage}
       setErrorMessage={setErrorMessage}
       initialValue={initialValue}
+      handleAutocomplete={handleAutocomplete}
     />
   );
 }

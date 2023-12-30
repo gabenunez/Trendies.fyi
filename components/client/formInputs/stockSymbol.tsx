@@ -77,14 +77,14 @@ export default function StockSymbolInput({
 
   const handleAutocomplete = async (inputText: string) => {
     const data = await fetch(
-      `/api-public/auto-complete?query=${encodeURI(inputText)}`
+      `/api-public/auto-complete/stocks?query=${encodeURI(inputText)}`
     );
 
     const jsonData = await data.json();
 
     const formattedData = jsonData.map((item) => {
       return {
-        name: `${item.symbol} - ${item.name}`,
+        name: `${item.symbol} (${item.name})`,
         value: item.symbol,
       };
     });
