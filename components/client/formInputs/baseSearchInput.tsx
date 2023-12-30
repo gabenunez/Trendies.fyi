@@ -88,6 +88,12 @@ export default function BaseSearchInput({
     setIsFocused(false);
   };
 
+  const handleDropdownEnterKey = (e, inputText) => {
+    if (e.key === "Enter") {
+      handleDropdownSelection(inputText);
+    }
+  };
+
   useEffect(() => {
     if (searchText && !inputFinalized && !initialValue) {
       const getList = async (inputText: string) => {
@@ -140,6 +146,7 @@ export default function BaseSearchInput({
                       tabIndex={0}
                       className="pl-2 p-1 hover:bg-gray-500 cursor-pointer"
                       onClick={() => handleDropdownSelection(item.value)}
+                      onKeyDown={(e) => handleDropdownEnterKey(e, item.value)}
                     >
                       {item.name}
                     </li>
