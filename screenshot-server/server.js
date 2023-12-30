@@ -20,7 +20,7 @@ app.use(express.json());
     await page.setViewport({ width: 1851, height: 698 });
 
     // Navigate the page to a URL
-    await page.goto(url + "&ogMode=true");
+    await page.goto(url + "&mode=og");
 
     // Apply styling
     await page.addStyleTag({ content: ".rounded-lg {border-radius: 0;}" });

@@ -26,7 +26,7 @@ export async function generateMetadata(
   { params, searchParams }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const isOGmode = searchParams?.ogMode;
+  const isOGmode = searchParams?.mode === "og";
 
   if (isOGmode) {
     return {};
@@ -52,7 +52,7 @@ export default async function Homepage({
 }) {
   let serverFetchedStocks: StocksType = [];
   let serverFetchedTrends: TrendsType = [];
-  const ogMode = searchParams.ogMode;
+  const ogMode = searchParams.mode === "og";
 
   const headersList = headers();
   const currentRequestUrl = headersList.get("x-request-url");
