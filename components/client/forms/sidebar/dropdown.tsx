@@ -36,7 +36,7 @@ export default function Dropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          className="mb-4 ml-auto px-2 py-2 text-white bg-gray-600 hover:bg-gray-500 h-8 flex justify-end items-center"
+          className="border-none mb-4 ml-auto px-2 py-2 text-white bg-gray-600 hover:bg-gray-500 hover:text-white h-8 flex justify-end items-center"
           variant="outline"
         >
           Add Line

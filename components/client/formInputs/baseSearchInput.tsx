@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,7 @@ type BaseSearchInputPropsType = {
   errorMessage: string;
   setErrorMessage: (inputText: string) => void;
   initialValue: string;
+  handleAutocomplete: (inputText: string) => Promise<any>;
 };
 
 export default function BaseSearchInput({
@@ -35,8 +36,10 @@ export default function BaseSearchInput({
   errorMessage,
   setErrorMessage,
   initialValue,
+  handleAutocomplete,
 }: BaseSearchInputPropsType) {
   const [inputText, setInputText] = useState(initialValue || "");
+  const [searchValues, setSearchValues] = useState([]);
   const [submittedText, setSubmittedText] = useState("");
 
   const handleSubmit = (event: KeyboardEvent | MouseEvent) => {
@@ -59,6 +62,24 @@ export default function BaseSearchInput({
     setInputText(newText);
   };
 
+  const handleDropdownSelection = (inputText: string) => {
+    setInputText(inputText);
+    handleSubmission(inputText);
+    setSubmittedText(inputText);
+  };
+
+  useEffect(() => {
+    if (inputText && !initialValue) {
+      const getList = async (inputText: string) => {
+        const list = await handleAutocomplete(inputText);
+        setSearchValues(list);
+        return list;
+      };
+
+      getList(inputText);
+    }
+  }, [inputText, handleAutocomplete, initialValue]);
+
   return (
     <fieldset>
       <Label hidden className="text-gray-300" htmlFor={htmlId}>
@@ -67,16 +88,37 @@ export default function BaseSearchInput({
       <div className="flex flex-row items-center">
         <Icon size="1.8em" className="mr-2" />
 
-        <Input
-          className="bg-gray-700 text-white placeholder-gray-500 aria-[invalid=error]:border-red-500"
-          id={htmlId}
-          placeholder={placeholder}
-          value={inputText}
-          onChange={handleOnChange}
-          onKeyDown={handleSubmit}
-          disabled={inputFinalized}
-          aria-invalid={errorMessage}
-        />
+        <div className="relative flex-1">
+          <Input
+            className="bg-gray-700 text-white placeholder-gray-500 border-none active:border aria-[invalid=error]:border-red-500"
+            id={htmlId}
+            placeholder={placeholder}
+            value={inputText}
+            onChange={handleOnChange}
+            onKeyDown={handleSubmit}
+            disabled={inputFinalized}
+            aria-invalid={errorMessage}
+          />
+
+          {searchValues?.length > 0 && (
+            <div className="bg-gray-700 overflow-hidden absolute z-10 w-full rounded border-white mt-1">
+              <ul>
+                {searchValues.map((item) => {
+                  return (
+                    <li
+                      key={item.name}
+                      tabIndex={0}
+                      className="pl-2 p-1 hover:bg-gray-500"
+                      onClick={() => handleDropdownSelection(item.value)}
+                    >
+                      {item.name}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+        </div>
 
         {!inputFinalized && (
           <Button className="ml-1 px-1" variant="ghost" onClick={handleSubmit}>

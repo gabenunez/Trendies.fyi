@@ -75,6 +75,22 @@ export default function StockSymbolInput({
     router.replace(createUrl("/", updatedQueryParams));
   }
 
+  const handleAutocomplete = async (inputText: string) => {
+    const data = await fetch(
+      `/api-public/auto-complete?query=${encodeURI(inputText)}`
+    );
+
+    const jsonData = await data.json();
+
+    const formattedData = jsonData.map((item) => {
+      return {
+        name: `${item.symbol} - ${item.name}`,
+        value: item.symbol,
+      };
+    });
+    return formattedData;
+  };
+
   return (
     <BaseSearchInput
       htmlId="stockTickerSymbol"
@@ -87,6 +103,7 @@ export default function StockSymbolInput({
       errorMessage={errorMessage}
       setErrorMessage={setErrorMessage}
       initialValue={initialValue}
+      handleAutocomplete={handleAutocomplete}
     />
   );
 }

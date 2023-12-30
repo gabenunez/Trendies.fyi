@@ -84,6 +84,13 @@ export async function fetchStockDataFromAPI(stockSymbol: string) {
   );
 }
 
+export async function fetchStockAutoCompleteFromAPI(keywords: string) {
+  return await fetchData(
+    `https://www.alphavantage.co`,
+    `/query?function=SYMBOL_SEARCH&keywords=${keywords}&apikey=${process.env.ALPHA_ADVANTAGE_API_KEY}`
+  );
+}
+
 export class UserTriggeredError extends Error {}
 
 export function calculatePercentages(numbers: number[]): number[] {
