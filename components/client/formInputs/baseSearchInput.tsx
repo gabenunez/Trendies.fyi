@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IconType } from "react-icons";
+import { useDebounce } from "use-debounce";
 
 import { RiErrorWarningLine } from "react-icons/ri";
 import { CiCircleRemove, CiSearch } from "react-icons/ci";
@@ -41,6 +42,7 @@ export default function BaseSearchInput({
   const [inputText, setInputText] = useState(initialValue || "");
   const [searchValues, setSearchValues] = useState([]);
   const [submittedText, setSubmittedText] = useState("");
+  const [searchText] = useDebounce(inputText, 500);
 
   const handleSubmit = (event: KeyboardEvent | MouseEvent) => {
     if ("key" in event && event.key === "Enter") {
@@ -69,16 +71,16 @@ export default function BaseSearchInput({
   };
 
   useEffect(() => {
-    if (inputText && !initialValue) {
+    if (searchText && !inputFinalized && !initialValue) {
       const getList = async (inputText: string) => {
         const list = await handleAutocomplete(inputText);
         setSearchValues(list);
         return list;
       };
 
-      getList(inputText);
+      getList(searchText);
     }
-  }, [inputText, handleAutocomplete, initialValue]);
+  }, [searchText, handleAutocomplete, initialValue, inputFinalized]);
 
   return (
     <fieldset>

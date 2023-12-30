@@ -1,2 +1,2 @@
 Allow: /og/*
-Allow: /api/og/*
+Allow: /api-private/og/*

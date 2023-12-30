@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/api/")) {
+  if (request.nextUrl.pathname.startsWith("/api-private/")) {
     if (
       request.headers.get("internal-secret") !==
       process.env.SVT_INTERNAL_REQUEST_SECRET

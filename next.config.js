@@ -6,7 +6,7 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/screenshot",
+        source: "/api-private/screenshot",
         destination: process.env.SCREENSHOT_SERVER_URL,
       },
     ];

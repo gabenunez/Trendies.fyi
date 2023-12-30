@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    await internalFetchRequest("/api/screenshot", {
+    await internalFetchRequest("/api-private/screenshot", {
       url,
     });
 

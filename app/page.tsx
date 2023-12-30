@@ -58,7 +58,7 @@ export default async function Homepage({
   const currentRequestUrl = headersList.get("x-request-url");
 
   if (!ogMode && (searchParams.stocks || searchParams.trends)) {
-    internalFetchRequest("/api/og", {
+    internalFetchRequest("/api-private/og", {
       url: currentRequestUrl,
     });
   }
@@ -72,7 +72,7 @@ export default async function Homepage({
     }
 
     const arrOfStockPromises = arrOfStocks.map((symbol) =>
-      internalFetchRequest("/api/stocks", {
+      internalFetchRequest("/api-private/stocks", {
         stockSymbol: symbol,
       })
     );
@@ -94,7 +94,7 @@ export default async function Homepage({
       });
 
       const arrOfTrendsPromises = googleTrendsQueries.map((query) =>
-        internalFetchRequest("/api/google-trends", {
+        internalFetchRequest("/api-private/google-trends", {
           trendsQuery: query,
         })
       );
