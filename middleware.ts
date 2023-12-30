@@ -5,7 +5,6 @@ import { kv } from "@vercel/kv";
 
 const ratelimit = new Ratelimit({
   redis: kv,
-  // 5 requests from the same IP in 10 seconds
   limiter: Ratelimit.slidingWindow(
     Number(process.env.RATE_LIMIT_AMOUNT_OF_REQUESTS),
     process.env.RATE_LIMIT_REQUESTS_DURATION ?? "10 s"
