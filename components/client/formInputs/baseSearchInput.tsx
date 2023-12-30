@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -43,6 +43,7 @@ export default function BaseSearchInput({
   const [searchValues, setSearchValues] = useState([]);
   const [submittedText, setSubmittedText] = useState("");
   const [searchText] = useDebounce(inputText, 500);
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleSubmit = (event: KeyboardEvent | MouseEvent) => {
     if ("key" in event && event.key === "Enter") {
@@ -64,10 +65,27 @@ export default function BaseSearchInput({
     setInputText(newText);
   };
 
+  // https://muffinman.io/blog/catching-the-blur-event-on-an-element-and-its-children/
+  const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
+    const currentTarget = e.currentTarget;
+
+    // Give browser time to focus the next element
+    requestAnimationFrame(() => {
+      // Check if the new focused element is a child of the original container
+      if (!currentTarget.contains(document.activeElement)) {
+        return setIsFocused(false);
+      }
+
+      return setIsFocused(true);
+    });
+  }, []);
+
   const handleDropdownSelection = (inputText: string) => {
+    setIsFocused(true);
     setInputText(inputText);
     handleSubmission(inputText);
     setSubmittedText(inputText);
+    setIsFocused(false);
   };
 
   useEffect(() => {
@@ -82,6 +100,12 @@ export default function BaseSearchInput({
     }
   }, [searchText, handleAutocomplete, initialValue, inputFinalized]);
 
+  useEffect(() => {
+    if (!inputText) {
+      setSearchValues([]);
+    }
+  }, [inputText]);
+
   return (
     <fieldset>
       <Label hidden className="text-gray-300" htmlFor={htmlId}>
@@ -90,7 +114,11 @@ export default function BaseSearchInput({
       <div className="flex flex-row items-center">
         <Icon size="1.8em" className="mr-2" />
 
-        <div className="relative flex-1">
+        <div
+          className="relative flex-1"
+          onFocus={() => setIsFocused(true)}
+          onBlur={handleBlur}
+        >
           <Input
             className="bg-gray-700 text-white placeholder-gray-500 border-none active:border aria-[invalid=error]:border-red-500"
             id={htmlId}
@@ -102,7 +130,7 @@ export default function BaseSearchInput({
             aria-invalid={errorMessage}
           />
 
-          {searchValues?.length > 0 && (
+          {searchValues?.length > 0 && isFocused && (
             <div className="bg-gray-700 overflow-hidden absolute z-10 w-full rounded border-white mt-1">
               <ul>
                 {searchValues.map((item) => {
@@ -110,7 +138,7 @@ export default function BaseSearchInput({
                     <li
                       key={item.name}
                       tabIndex={0}
-                      className="pl-2 p-1 hover:bg-gray-500"
+                      className="pl-2 p-1 hover:bg-gray-500 cursor-pointer"
                       onClick={() => handleDropdownSelection(item.value)}
                     >
                       {item.name}
