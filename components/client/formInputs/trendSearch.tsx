@@ -71,19 +71,25 @@ export default function TrendsSearchInput({
   }
 
   const handleAutocomplete = async (inputText: string) => {
-    const data = await fetch(
-      `/api-public/auto-complete/trends?query=${encodeURI(inputText)}`
-    );
+    try {
+      const data = await fetch(
+        `/api-public/auto-complete/trends?query=${encodeURI(inputText)}`,
+        { next: { revalidate: 86400 } }
+      );
 
-    const jsonData = await data.json();
+      const jsonData = await data.json();
 
-    const formattedData = jsonData.map((item) => {
-      return {
-        name: `${item.name} (${item.type})`,
-        value: item.name,
-      };
-    });
-    return formattedData;
+      const formattedData = jsonData.map((item) => {
+        return {
+          name: `${item.name} (${item.type})`,
+          value: item.name,
+        };
+      });
+      return formattedData;
+    } catch (error) {
+      // Silently catch the error, since this can be rate limited
+      return [];
+    }
   };
 
   return (
