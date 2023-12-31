@@ -26,7 +26,7 @@ export async function generateMetadata(
   { params, searchParams }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const isOGmode = searchParams?.mode === "og";
+  const isOGmode = searchParams?.ogMode;
 
   if (isOGmode) {
     return {};
@@ -52,7 +52,7 @@ export default async function Homepage({
 }) {
   let serverFetchedStocks: StocksType = [];
   let serverFetchedTrends: TrendsType = [];
-  const ogMode = searchParams.mode === "og";
+  const ogMode = searchParams.ogMode;
   const splitMode = searchParams.mode === "split";
 
   const headersList = headers();
@@ -128,7 +128,10 @@ export default async function Homepage({
         />
       </aside>
       <div className="w-full h-full md:w-2/3 p-4 flex flex-col">
-        <div className="h-full border rounded-lg border-gray-600 flex-grow">
+        <div
+          id="graph-area"
+          className="h-full border rounded-lg border-gray-600 flex-grow"
+        >
           <GraphArea
             serverFetchedStocks={serverFetchedStocks?.filter(
               (stock) => !stock.data.error

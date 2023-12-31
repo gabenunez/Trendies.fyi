@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const requestURL = new URL(decodeURIComponent(request.url));
   const { searchParams } = requestURL;
 
-  const ogModeDetected = searchParams?.get("mode") === "og";
+  const ogModeDetected = searchParams?.get("ogMode");
 
   if (ogModeDetected) {
     return Response.json({

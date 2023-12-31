@@ -20,13 +20,15 @@ app.use(express.json());
     await page.setViewport({ width: 1851, height: 698 });
 
     // Navigate the page to a URL
-    await page.goto(url + "&mode=og");
+    await page.goto(url + "&ogMode=true");
 
     // Apply styling
-    await page.addStyleTag({ content: ".rounded-lg {border-radius: 0;}" });
+    await page.addStyleTag({
+      content: ".rounded-lg {border-radius: 0;} #graph-area {border: none;}",
+    });
 
     // Select graph area
-    const element = await page.waitForSelector("#graph-area .recharts-wrapper");
+    const element = await page.waitForSelector("#graph-area");
 
     // Take a screenshot
     const graphScreenshot = await element.screenshot();

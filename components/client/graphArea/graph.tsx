@@ -127,7 +127,6 @@ export default function Graph({
         <>
           {stocksExist && (
             <ResponsiveContainer
-              id="graph-area"
               width="100%"
               height={trendsExist ? "50%" : "100%"}
             >
@@ -173,7 +172,6 @@ export default function Graph({
 
           {trendsExist && (
             <ResponsiveContainer
-              id="graph-area"
               width="100%"
               height={stocksExist ? "50%" : "100%"}
             >
@@ -218,7 +216,7 @@ export default function Graph({
       );
     }
     return (
-      <ResponsiveContainer id="graph-area" width="100%" height="100%">
+      <ResponsiveContainer width="100%" height="100%">
         <LineChart
           width={500}
           height={300}
