@@ -1,6 +1,5 @@
 import "dotenv/config";
 import express from "express";
-import puppeteer from "puppeteer";
 import { put } from "@vercel/blob";
 import { Cluster } from "puppeteer-cluster";
 
