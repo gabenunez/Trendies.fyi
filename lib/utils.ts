@@ -150,10 +150,16 @@ const ensureParamOrder = (
   params: URLSearchParams | ReadonlyURLSearchParams
 ) => {
   const addNewParamData = params.get("addNew");
+  const modeParam = params.get("mode");
 
   if (addNewParamData) {
     params.delete("addNew");
     params.set("addNew", addNewParamData);
+  }
+
+  if (modeParam) {
+    params.delete("mode");
+    params.set("mode", modeParam);
   }
 
   return params;

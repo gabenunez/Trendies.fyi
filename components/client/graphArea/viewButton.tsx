@@ -76,7 +76,7 @@ export default function ViewButton({
     };
 
     return (
-      <Button onClick={handleOnClick} className="w-full">
+      <Button onClick={handleOnClick}>
         <Icon size={"1.4em"} className="mr-1" /> {title}
       </Button>
     );
@@ -87,7 +87,7 @@ export default function ViewButton({
       <DropdownMenuTrigger className="absolute z-10 opacity-60 hover:opacity-100 top-0 right-0 p-2">
         <DropdownButton view={currentView} isPrimaryDropdownButton />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-50 bg-transparent hover:bg-transparent border-none shadow-none text-center opacity-100 ">
+      <DropdownMenuContent className="w-full bg-transparent hover:bg-transparent border-none shadow-none text-center opacity-100 ">
         {filteredViews.map((view) => {
           return <DropdownButton key={view} view={view} />;
         })}
