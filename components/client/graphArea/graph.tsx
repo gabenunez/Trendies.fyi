@@ -26,7 +26,7 @@ const formatInfo = (value, name, props) => {
   return [`${value}%`, name];
 };
 
-const CustomTooltip = ({ active, payload, label }) => {
+const PercentageCustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div className="w-auto h-auto bg-gray-600 p-3 bg-opacity-70 rounded-lg">
@@ -41,14 +41,31 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
+const DollarCustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="w-auto h-auto bg-gray-600 p-3 bg-opacity-70 rounded-lg">
+        <p className="text-xs">{label}</p>
+        {payload.map((item, index) => (
+          <p key={item.name + index}>{`${item.name}: $${item.value}`}</p>
+        ))}
+      </div>
+    );
+  }
+
+  return null;
+};
+
 export default function Graph({
   serverFetchedStocks,
   serverFetchedTrends,
   ogMode,
+  splitMode,
 }: {
   serverFetchedStocks: StocksType;
   serverFetchedTrends: TrendsType;
   ogMode: boolean;
+  splitMode: boolean;
 }) {
   let graphLineData: { time: number }[] = [];
 
@@ -63,6 +80,9 @@ export default function Graph({
         date: unixTimestampToDate(timestamp),
         [`${stockDataIndex}-stock-search-value`]:
           dataItem.data.averages[timestampIndex],
+        [`${stockDataIndex}-stock-price`]: Number(
+          dataItem.data.prices[timestampIndex]
+        ).toFixed(2),
       };
 
       if (existingEntry) {
@@ -98,6 +118,105 @@ export default function Graph({
   });
 
   if (graphLineData.length) {
+    if (splitMode) {
+      const syncId = "pizza"; // Used to keep the graphs in sync when hovering
+      const stocksExist = serverFetchedStocks?.length > 0;
+      const trendsExist = serverFetchedTrends?.length > 0;
+
+      return (
+        <>
+          {stocksExist && (
+            <ResponsiveContainer
+              id="graph-area"
+              width="100%"
+              height={trendsExist ? "50%" : "100%"}
+            >
+              <LineChart
+                width={500}
+                height={300}
+                data={graphLineData}
+                margin={{
+                  top: 0,
+                  right: !ogMode ? 5 : 0,
+                  left: !ogMode ? -10 : 0,
+                  bottom: !ogMode ? 5 : 0,
+                }}
+                syncId={syncId}
+              >
+                <XAxis hide={ogMode} dataKey="date" />
+                <YAxis hide={ogMode} unit="$" />
+
+                <Tooltip
+                  content={<DollarCustomTooltip />}
+                  formatter={formatInfo}
+                />
+                {!ogMode && <Legend />}
+
+                {serverFetchedStocks.map((item, index) => {
+                  return (
+                    <Line
+                      key={item.searchTerm + "-stock"}
+                      name={`$${item.searchTerm.toUpperCase()}`}
+                      type="monotone"
+                      dataKey={`${index}-stock-price`}
+                      stroke="#3b82f5"
+                      activeDot={{ r: 8 }}
+                      legendType="circle"
+                      connectNulls={true}
+                      isAnimationActive={!ogMode}
+                    />
+                  );
+                })}
+              </LineChart>
+            </ResponsiveContainer>
+          )}
+
+          {trendsExist && (
+            <ResponsiveContainer
+              id="graph-area"
+              width="100%"
+              height={stocksExist ? "50%" : "100%"}
+            >
+              <LineChart
+                width={500}
+                height="100%"
+                data={graphLineData}
+                margin={{
+                  top: 0,
+                  right: !ogMode ? 5 : 0,
+                  left: !ogMode ? -10 : 0,
+                  bottom: !ogMode ? 5 : 0,
+                }}
+                syncId={syncId}
+              >
+                <XAxis hide={ogMode} dataKey="date" />
+                <YAxis hide={ogMode} unit="%" />
+
+                <Tooltip
+                  content={<PercentageCustomTooltip />}
+                  formatter={formatInfo}
+                />
+                {!ogMode && <Legend />}
+
+                {serverFetchedTrends.map((trendSearch, index) => (
+                  <Line
+                    key={trendSearch.searchTerm + "-GT"} // GT in case that stocks have the same key
+                    name={`GT: ${trendSearch.searchTerm}`}
+                    type="monotone"
+                    dataKey={`${index}-trend-search-value`}
+                    stroke="#34A853"
+                    activeDot={{ r: 8 }}
+                    connectNulls={true}
+                    legendType="circle"
+                    isAnimationActive={!ogMode}
+                  />
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
+          )}
+        </>
+      );
+    }
     return (
       <ResponsiveContainer id="graph-area" width="100%" height="100%">
         <LineChart
@@ -107,14 +226,17 @@ export default function Graph({
           margin={{
             top: 0,
             right: !ogMode ? 5 : 0,
-            left: !ogMode ? 5 : 0,
-            bottom: !ogMode ? 5 : 0,
+            left: !ogMode ? -10 : 0,
+            bottom: !ogMode ? 0 : 0,
           }}
         >
           <XAxis hide={ogMode} dataKey="date" />
           <YAxis hide={ogMode} unit="%" />
 
-          <Tooltip content={<CustomTooltip />} formatter={formatInfo} />
+          <Tooltip
+            content={<PercentageCustomTooltip />}
+            formatter={formatInfo}
+          />
           {!ogMode && <Legend />}
 
           {serverFetchedStocks.map((item, index) => {

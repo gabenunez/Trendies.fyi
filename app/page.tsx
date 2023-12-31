@@ -53,6 +53,7 @@ export default async function Homepage({
   let serverFetchedStocks: StocksType = [];
   let serverFetchedTrends: TrendsType = [];
   const ogMode = searchParams.mode === "og";
+  const splitMode = searchParams.mode === "split";
 
   const headersList = headers();
   const currentRequestUrl = headersList.get("x-request-url");
@@ -136,6 +137,7 @@ export default async function Homepage({
               (trend) => !trend.error
             )}
             ogMode={Boolean(ogMode)}
+            splitMode={Boolean(splitMode)}
           />
         </div>
         <footer className="w-full flex flex-col justify-center items-center bg-gray-700 text-white p-2 mt-4 rounded-lg">
