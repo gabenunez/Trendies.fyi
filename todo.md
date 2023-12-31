@@ -5,8 +5,8 @@
 3. DONE - OG images
 4. Done? Proper error handling
    a. I think we may be okay for an MVP release, but I feel like return data should be standardized.
-5. Suggested search for Stonks / Trends?
-6. Ability to see actual stonk price (aka two graphs again)
+5. DONE - Suggested search for Stonks / Trends?
+6. DONE - Ability to see actual stonk price (aka two graphs again)
 7. DONE - Ensure GT responses are cached unsafe_cache? :thinking:
    a. Just went back to using fetch requests for this, which is stable
 8. DONE - Ability to delete search areas before a search is completed
