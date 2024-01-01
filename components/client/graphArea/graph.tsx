@@ -320,7 +320,7 @@ export default function Graph({
             </svg>
             <a
               className="underline ml-0"
-              href="https://github.com/gabenunez/StockvsTrend-v2/issues"
+              href="https://github.com/gabenunez/Trendies.fyi/issues"
               target="_blank"
             >
               {" "}
