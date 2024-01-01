@@ -151,6 +151,8 @@ const ensureParamOrder = (
 ) => {
   const addNewParamData = params.get("addNew");
   const modeParam = params.get("mode");
+  const stockColors = params.get("stockColors");
+  const trendsColors = params.get("trendsColors");
 
   if (addNewParamData) {
     params.delete("addNew");
@@ -160,6 +162,16 @@ const ensureParamOrder = (
   if (modeParam) {
     params.delete("mode");
     params.set("mode", modeParam);
+  }
+
+  if (stockColors) {
+    params.delete("stockColors");
+    params.set("stockColors", stockColors);
+  }
+
+  if (trendsColors) {
+    params.delete("trendsColors");
+    params.set("trendsColors", trendsColors);
   }
 
   return params;
