@@ -10,4 +10,4 @@
 7. DONE - Ensure GT responses are cached unsafe_cache? :thinking:
    a. Just went back to using fetch requests for this, which is stable
 8. DONE - Ability to delete search areas before a search is completed
-9. Ability to change colors of graph lines?
+9. DONE - Ability to change colors of graph lines?
