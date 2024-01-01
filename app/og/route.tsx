@@ -251,6 +251,7 @@ export async function GET(request: Request) {
               alignItems: "baseline",
             }}
           >
+            <Logo />
             Trendies<span style={{ fontSize: ".4em" }}>.fyi</span>
           </h1>
         </div>
