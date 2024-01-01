@@ -123,8 +123,9 @@ export default async function Homepage({
           className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tighter text-center text-green-500 hover:text-blue-500 transition-colors duration-500 ease-in-out flex justify-center align-middle"
         >
           <Image
+            priority
+            alt="Trendies logo, a couple chicken tendies"
             style={{ height: "1.3em", width: "auto" }}
-            height={"1.3em"}
             src={logo}
             className="mr-1"
           />
