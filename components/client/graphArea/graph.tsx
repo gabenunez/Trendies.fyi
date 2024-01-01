@@ -297,9 +297,9 @@ export default function Graph({
             Welcome
           </h1>
           <p className="max-w-[900px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-zinc-400">
-            StockVsTrends has been rebuilt from the ground up, finally briging
-            you features that have sat untouched for years! Start now by
-            searching!
+            StockVsTrends has been rebuilt from the ground up and transformed to
+            Trendies! Finally briging you features that have sat untouched for
+            years! Start now by searching!
           </p>
           <p className="max-w-[900px] text-zinc-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-zinc-400 flex items-center ">
             Have an idea for a feature?{" "}
