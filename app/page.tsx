@@ -43,7 +43,7 @@ export async function generateMetadata(
     openGraph: {
       images: isOGmode
         ? undefined
-        : baseUrl + "/og?" + currentRequestUrl?.split("?")[1],
+        : baseUrl + "/og?" + (currentRequestUrl?.split("?")[1] ?? ""),
     },
   };
 }
