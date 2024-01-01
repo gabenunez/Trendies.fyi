@@ -70,6 +70,20 @@ export default function Graph({
 }) {
   let graphLineData: { time: number }[] = [];
 
+  const getLineColor = ({
+    paramKey,
+    index,
+  }: {
+    paramKey: string;
+    index: number;
+  }) => {
+    const splitItems = searchParams[paramKey]?.split(",");
+
+    if (Array.isArray(splitItems)) {
+      return splitItems[index];
+    }
+  };
+
   // Loop and add each data type to the chart
   serverFetchedStocks.forEach((dataItem, stockDataIndex) => {
     dataItem.data.timestamps.forEach((timestamp, timestampIndex) => {
@@ -161,7 +175,7 @@ export default function Graph({
                       name={`$${item.searchTerm.toUpperCase()}`}
                       type="monotone"
                       dataKey={`${index}-stock-price`}
-                      stroke="#3b82f5"
+                      stroke={getLineColor({ paramKey: "stocksColors", index })}
                       activeDot={{ r: 8 }}
                       legendType="circle"
                       connectNulls={true}
@@ -250,7 +264,7 @@ export default function Graph({
                 name={`$${item.searchTerm.toUpperCase()}`}
                 type="monotone"
                 dataKey={`${index}-stock-search-value`}
-                stroke="#3b82f5"
+                stroke={getLineColor({ paramKey: "stocksColors", index })}
                 activeDot={{ r: 8 }}
                 legendType="circle"
                 connectNulls={true}

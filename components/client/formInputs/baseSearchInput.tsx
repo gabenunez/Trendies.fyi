@@ -26,7 +26,8 @@ type BaseSearchInputPropsType = {
   setErrorMessage: (inputText: string) => void;
   initialValue: string;
   handleAutocomplete: (inputText: string) => Promise<any>;
-  defaultColor: string;
+  handleLineColorChange: (inputText: string) => void;
+  defaultLineColorHex: string;
 };
 
 export default function BaseSearchInput({
@@ -41,7 +42,8 @@ export default function BaseSearchInput({
   setErrorMessage,
   initialValue,
   handleAutocomplete,
-  defaultColor,
+  defaultLineColorHex,
+  handleLineColorChange,
 }: BaseSearchInputPropsType) {
   const [inputText, setInputText] = useState(initialValue || "");
   const [searchValues, setSearchValues] = useState([]);
@@ -49,7 +51,7 @@ export default function BaseSearchInput({
   const [searchText] = useDebounce(inputText, 500);
   const [isFocused, setIsFocused] = useState(false);
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
-  const [color, setColor] = useState(defaultColor);
+  const [lineColor, setLineColor] = useState(defaultLineColorHex);
 
   const colorPopover = useRef(null);
   const iconButtonRef = useRef(null);
@@ -123,6 +125,12 @@ export default function BaseSearchInput({
     }
   }, [inputText]);
 
+  useEffect(() => {
+    if (!isColorPickerOpen) {
+      handleLineColorChange(lineColor);
+    }
+  }, [isColorPickerOpen]);
+
   return (
     <fieldset>
       <Label hidden className="text-gray-300" htmlFor={htmlId}>
@@ -135,10 +143,12 @@ export default function BaseSearchInput({
               isColorPickerOpen && "border-white"
             }`}
             ref={iconButtonRef}
-            style={{ backgroundColor: color }}
+            style={{ backgroundColor: lineColor }}
             onClick={(e) => {
               e.preventDefault();
-              setIsColorPickerOpen(!isColorPickerOpen);
+              if (inputFinalized) {
+                setIsColorPickerOpen(!isColorPickerOpen);
+              }
             }}
           >
             <Icon size="1.8em" />
@@ -146,7 +156,7 @@ export default function BaseSearchInput({
 
           {isColorPickerOpen && (
             <div className="popover absolute z-20" ref={colorPopover}>
-              <HexColorPicker color={color} onChange={setColor} />
+              <HexColorPicker color={lineColor} onChange={setLineColor} />
             </div>
           )}
         </div>

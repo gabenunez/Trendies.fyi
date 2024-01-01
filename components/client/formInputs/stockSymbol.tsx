@@ -8,12 +8,17 @@ import {
   createUrl,
   addItemToQueryParm,
   removeItemFromQueryParm,
+  removeIndexFromQueryParm,
+  getIndexItemFromQueryParm,
+  editIndexItemInQueryParm,
 } from "@/lib/utils";
 
 export default function StockSymbolInput({
   initialValue,
   errors,
+  index,
 }: {
+  index: number;
   initialValue: string;
   errors: {
     searchTerm: string;
@@ -49,7 +54,7 @@ export default function StockSymbolInput({
     const addedColorQueryParams = addItemToQueryParm({
       params: addedItemQueryParams,
       paramKey: "stocksColors",
-      newItem: "3b82f5",
+      newItem: "#3b82f5",
     });
 
     const updatedQueryParams = removeItemFromQueryParm({
@@ -75,6 +80,12 @@ export default function StockSymbolInput({
         params: newParams,
         paramKey: "stocks",
         itemToDelete: inputText,
+      });
+
+      updatedQueryParams = removeIndexFromQueryParm({
+        params: updatedQueryParams,
+        paramKey: "stocksColors",
+        index,
       });
     }
 
@@ -103,6 +114,23 @@ export default function StockSymbolInput({
     }
   };
 
+  const handleLineColorChange = (newValue: string) => {
+    const updatedParams = editIndexItemInQueryParm({
+      params: newParams,
+      paramKey: "stocksColors",
+      index,
+      newValue: newValue,
+    });
+
+    router.replace(createUrl("/", updatedParams));
+  };
+
+  const defaultLineColorHex = getIndexItemFromQueryParm({
+    params: newParams,
+    paramKey: "stocksColors",
+    index,
+  });
+
   return (
     <BaseSearchInput
       htmlId="stockTickerSymbol"
@@ -116,6 +144,8 @@ export default function StockSymbolInput({
       setErrorMessage={setErrorMessage}
       initialValue={initialValue}
       handleAutocomplete={handleAutocomplete}
+      defaultLineColorHex={defaultLineColorHex}
+      handleLineColorChange={handleLineColorChange}
     />
   );
 }

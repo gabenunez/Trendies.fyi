@@ -227,6 +227,76 @@ export const removeItemFromQueryParm = ({
   return params;
 };
 
+export const removeIndexFromQueryParm = ({
+  params,
+  paramKey,
+  index,
+}: {
+  params: URLSearchParams | ReadonlyURLSearchParams;
+  paramKey: string;
+  index: number;
+}) => {
+  let arrOfItemsInParam = getParamData({ params, paramKey });
+
+  if (Array.isArray(arrOfItemsInParam)) {
+    arrOfItemsInParam.splice(index, 1);
+  }
+
+  if (arrOfItemsInParam?.length) {
+    const filteredParamData = arrOfItemsInParam.join(",");
+    params.set(paramKey, filteredParamData);
+  } else {
+    params.delete(paramKey);
+  }
+
+  params = ensureParamOrder(params);
+
+  return params;
+};
+
+export const getIndexItemFromQueryParm = ({
+  params,
+  paramKey,
+  index,
+}: {
+  params: URLSearchParams | ReadonlyURLSearchParams;
+  paramKey: string;
+  index: number;
+}) => {
+  let arrOfItemsInParam = getParamData({ params, paramKey });
+
+  if (Array.isArray(arrOfItemsInParam)) {
+    return arrOfItemsInParam[index];
+  }
+
+  return "";
+};
+
+export const editIndexItemInQueryParm = ({
+  params,
+  paramKey,
+  index,
+  newValue,
+}: {
+  params: URLSearchParams | ReadonlyURLSearchParams;
+  paramKey: string;
+  index: number;
+  newValue: string;
+}) => {
+  let arrOfItemsInParam = getParamData({ params, paramKey });
+
+  if (Array.isArray(arrOfItemsInParam)) {
+    arrOfItemsInParam[index] = newValue;
+  }
+
+  const filteredParamData = arrOfItemsInParam.join(",");
+  params.set(paramKey, filteredParamData);
+
+  params = ensureParamOrder(params);
+
+  return params;
+};
+
 export const isInQueryParam = ({
   params,
   paramKey,
