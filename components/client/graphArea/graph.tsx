@@ -146,7 +146,7 @@ export default function Graph({
               height={trendsExist ? "50%" : "100%"}
               className="relative"
             >
-              <ViewButton currentView="split" />
+              {!ogMode && <ViewButton currentView="split" />}
               <LineChart
                 width={500}
                 height={300}
@@ -193,7 +193,7 @@ export default function Graph({
               height={stocksExist ? "50%" : "100%"}
               className="relative"
             >
-              {!stocksExist && <ViewButton currentView="split" />}
+              {!ogMode && !stocksExist && <ViewButton currentView="split" />}
               <LineChart
                 width={500}
                 height="100%"
@@ -236,7 +236,7 @@ export default function Graph({
     }
     return (
       <ResponsiveContainer width="100%" height="100%" className="relative">
-        <ViewButton />
+        {!ogMode && <ViewButton />}
         <LineChart
           width={500}
           height={300}

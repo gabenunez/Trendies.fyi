@@ -23,7 +23,8 @@ app.use(express.json());
 
     // Apply styling
     await page.addStyleTag({
-      content: ".rounded-lg {border-radius: 0;} #graph-area {border: none;}",
+      content:
+        ".rounded-lg {border-radius: 0;} #graph-area {border: none;} #view-button: {display: none}",
     });
 
     // Select graph area

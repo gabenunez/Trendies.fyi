@@ -37,8 +37,7 @@ export async function generateMetadata(
   const currentRequestUrl = headersList.get("x-request-url");
 
   return {
-    title:
-      "Trendies.fyi | Compare Stocks vs Google Trends for ultimate insights!",
+    title: "Trendies | Compare Stocks vs Google Trends for ultimate insights!",
     metadataBase: new URL(baseUrl),
     openGraph: {
       images: isOGmode

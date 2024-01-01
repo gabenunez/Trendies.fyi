@@ -88,7 +88,10 @@ export default function ViewButton({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="absolute z-10 opacity-60 hover:opacity-100 top-0 right-0 p-2">
+        <div
+          id="view-button"
+          className="absolute z-10 opacity-60 hover:opacity-100 top-0 right-0 p-2"
+        >
           <DropdownButton view={currentView} isPrimaryDropdownButton />
         </div>
       </DropdownMenuTrigger>

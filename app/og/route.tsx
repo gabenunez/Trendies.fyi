@@ -42,6 +42,7 @@ export async function GET(request: Request) {
             height: "100%",
             color: "white",
             backgroundColor: "#1f2937",
+            position: "relative",
           }}
         >
           {imageUrl && (
@@ -144,6 +145,28 @@ export async function GET(request: Request) {
                 </h2>
               </div>
             )}
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              display: "flex",
+              flexDirection: "row",
+              color: "#3b82f552",
+              bottom: "10px",
+            }}
+          >
+            <h1
+              style={{
+                fontSize: "4em",
+                display: "flex",
+                alignItems: "baseline",
+                position: "absolute",
+                bottom: "10px",
+                left: "860px",
+              }}
+            >
+              Trendies<span style={{ fontSize: ".4em" }}>.fyi</span>
+            </h1>
           </div>
         </div>
       ),
