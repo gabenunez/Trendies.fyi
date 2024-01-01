@@ -9,7 +9,8 @@ import {
 } from "../lib/utils";
 import { Metadata, ResolvingMetadata } from "next";
 import { headers } from "next/headers";
-import { AiOutlineStock } from "react-icons/ai";
+import Image from "next/image";
+import logo from "./logo.png";
 
 const baseUrl = getCurrentURL();
 
@@ -117,8 +118,16 @@ export default async function Homepage({
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-800 text-white">
       <aside className="w-full md:w-1/3 p-4 border-r border-gray-600">
-        <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tighter text-center text-green-500 hover:text-blue-500 transition-colors duration-500 ease-in-out flex justify-center align-middle">
-          <AiOutlineStock size="1.3em" />
+        <div
+          style={{ alignItems: "center" }}
+          className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tighter text-center text-green-500 hover:text-blue-500 transition-colors duration-500 ease-in-out flex justify-center align-middle"
+        >
+          <Image
+            style={{ height: "1.3em", width: "auto" }}
+            height={"1.3em"}
+            src={logo}
+            className="mr-1"
+          />
           <h1>
             <div>
               Trendies<span className="text-base">.fyi</span>
