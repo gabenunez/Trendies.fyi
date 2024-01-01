@@ -114,23 +114,6 @@ export default function StockSymbolInput({
     }
   };
 
-  const handleLineColorChange = (newValue: string) => {
-    const updatedParams = editIndexItemInQueryParm({
-      params: newParams,
-      paramKey: "stocksColors",
-      index,
-      newValue: newValue,
-    });
-
-    router.replace(createUrl("/", updatedParams));
-  };
-
-  const defaultLineColorHex = getIndexItemFromQueryParm({
-    params: newParams,
-    paramKey: "stocksColors",
-    index,
-  });
-
   return (
     <BaseSearchInput
       htmlId="stockTickerSymbol"
@@ -144,8 +127,8 @@ export default function StockSymbolInput({
       setErrorMessage={setErrorMessage}
       initialValue={initialValue}
       handleAutocomplete={handleAutocomplete}
-      defaultLineColorHex={defaultLineColorHex}
-      handleLineColorChange={handleLineColorChange}
+      relativeIndex={index}
+      colorQueryParamName="stocksColors"
     />
   );
 }

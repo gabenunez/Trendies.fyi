@@ -221,7 +221,7 @@ export default function Graph({
                     name={`GT: ${trendSearch.searchTerm}`}
                     type="monotone"
                     dataKey={`${index}-trend-search-value`}
-                    stroke="#34A853"
+                    stroke={getLineColor({ paramKey: "trendsColors", index })}
                     activeDot={{ r: 8 }}
                     connectNulls={true}
                     legendType="circle"
@@ -279,7 +279,7 @@ export default function Graph({
               name={`GT: ${trendSearch.searchTerm}`}
               type="monotone"
               dataKey={`${index}-trend-search-value`}
-              stroke="#34A853"
+              stroke={getLineColor({ paramKey: "trendsColors", index })}
               activeDot={{ r: 8 }}
               connectNulls={true}
               legendType="circle"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useCallback, useState, useRef } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,12 @@ import { HexColorPicker } from "react-colorful";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { CiCircleRemove, CiSearch } from "react-icons/ci";
 import { MouseEvent, KeyboardEvent } from "react";
-import { cn } from "@/lib/utils";
+import {
+  cn,
+  createUrl,
+  editIndexItemInQueryParm,
+  getIndexItemFromQueryParm,
+} from "@/lib/utils";
 import { useClickOutside } from "@/lib/hooks";
 
 type BaseSearchInputPropsType = {
@@ -26,8 +32,8 @@ type BaseSearchInputPropsType = {
   setErrorMessage: (inputText: string) => void;
   initialValue: string;
   handleAutocomplete: (inputText: string) => Promise<any>;
-  handleLineColorChange: (inputText: string) => void;
-  defaultLineColorHex: string;
+  relativeIndex: number;
+  colorQueryParamName: string;
 };
 
 export default function BaseSearchInput({
@@ -42,8 +48,8 @@ export default function BaseSearchInput({
   setErrorMessage,
   initialValue,
   handleAutocomplete,
-  defaultLineColorHex,
-  handleLineColorChange,
+  relativeIndex,
+  colorQueryParamName,
 }: BaseSearchInputPropsType) {
   const [inputText, setInputText] = useState(initialValue || "");
   const [searchValues, setSearchValues] = useState([]);
@@ -51,10 +57,22 @@ export default function BaseSearchInput({
   const [searchText] = useDebounce(inputText, 500);
   const [isFocused, setIsFocused] = useState(false);
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
+
+  const searchParams = useSearchParams();
+  const newParams = new URLSearchParams(searchParams.toString());
+
+  const defaultLineColorHex = getIndexItemFromQueryParm({
+    params: newParams,
+    paramKey: colorQueryParamName,
+    index: relativeIndex,
+  });
+
   const [lineColor, setLineColor] = useState(defaultLineColorHex);
 
   const colorPopover = useRef(null);
   const iconButtonRef = useRef(null);
+
+  const router = useRouter();
 
   useClickOutside(colorPopover, () => setIsColorPickerOpen(false));
 
@@ -107,6 +125,17 @@ export default function BaseSearchInput({
     }
   };
 
+  const handleLineColorChange = () => {
+    const updatedParams = editIndexItemInQueryParm({
+      params: newParams,
+      paramKey: colorQueryParamName,
+      index: relativeIndex,
+      newValue: lineColor,
+    });
+
+    router.replace(createUrl("/", updatedParams));
+  };
+
   useEffect(() => {
     if (searchText && !inputFinalized && !initialValue) {
       const getList = async (inputText: string) => {
@@ -126,8 +155,9 @@ export default function BaseSearchInput({
   }, [inputText]);
 
   useEffect(() => {
-    if (!isColorPickerOpen) {
-      handleLineColorChange(lineColor);
+    if (!isColorPickerOpen && inputFinalized) {
+      handleLineColorChange();
+      console.log("fired");
     }
   }, [isColorPickerOpen]);
 

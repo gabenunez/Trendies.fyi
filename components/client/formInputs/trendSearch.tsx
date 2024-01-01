@@ -8,6 +8,7 @@ import {
   createUrl,
   addItemToQueryParm,
   removeItemFromQueryParm,
+  removeIndexFromQueryParm,
 } from "@/lib/utils";
 
 export default function TrendsSearchInput({
@@ -20,8 +21,6 @@ export default function TrendsSearchInput({
 }) {
   const router = useRouter();
   const [inputFinalized, setInputFinalized] = useState(false);
-
-  console.log(index);
 
   const initErrorMessage = errors?.find(
     (error) => error.searchTerm === initialValue
@@ -44,8 +43,14 @@ export default function TrendsSearchInput({
       newItem: inputText,
     });
 
-    const updatedQueryParams = removeItemFromQueryParm({
+    const addedColorQueryParams = addItemToQueryParm({
       params: addedItemQueryParams,
+      paramKey: "trendsColors",
+      newItem: "#22c55d",
+    });
+
+    const updatedQueryParams = removeItemFromQueryParm({
+      params: addedColorQueryParams,
       paramKey: "addNew",
       itemToDelete: "trends",
     });
@@ -68,6 +73,12 @@ export default function TrendsSearchInput({
         params: newParams,
         paramKey: "trends",
         itemToDelete: inputText,
+      });
+
+      updatedQueryParams = removeIndexFromQueryParm({
+        params: updatedQueryParams,
+        paramKey: "trendsColors",
+        index,
       });
     }
 
@@ -109,6 +120,8 @@ export default function TrendsSearchInput({
       setErrorMessage={setErrorMessage}
       initialValue={initialValue}
       handleAutocomplete={handleAutocomplete}
+      relativeIndex={index}
+      colorQueryParamName="trendsColors"
     />
   );
 }
