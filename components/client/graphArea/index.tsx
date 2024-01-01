@@ -8,11 +8,13 @@ export default function GraphArea({
   serverFetchedTrends,
   ogMode,
   splitMode,
+  searchParams,
 }: {
   serverFetchedStocks: StocksType;
   serverFetchedTrends: TrendsType;
   ogMode: boolean;
   splitMode: boolean;
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
   return (
     <Graph
@@ -20,6 +22,7 @@ export default function GraphArea({
       serverFetchedStocks={serverFetchedStocks}
       ogMode={ogMode}
       splitMode={splitMode}
+      searchParams={searchParams}
     />
   );
 }

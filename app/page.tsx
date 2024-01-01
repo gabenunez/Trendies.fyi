@@ -52,6 +52,7 @@ export default async function Homepage({
 }) {
   let serverFetchedStocks: StocksType = [];
   let serverFetchedTrends: TrendsType = [];
+  let stocksColors = [];
   const ogMode = searchParams.ogMode;
   const splitMode = searchParams.mode === "split";
 
@@ -141,6 +142,7 @@ export default async function Homepage({
             )}
             ogMode={Boolean(ogMode)}
             splitMode={Boolean(splitMode)}
+            searchParams={searchParams}
           />
         </div>
         <footer className="w-full flex flex-col justify-center items-center bg-gray-700 text-white p-2 mt-4 rounded-lg">

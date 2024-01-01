@@ -1,16 +1,18 @@
 "use client";
 
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useState, useRef } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IconType } from "react-icons";
 import { useDebounce } from "use-debounce";
+import { HexColorPicker } from "react-colorful";
 
 import { RiErrorWarningLine } from "react-icons/ri";
 import { CiCircleRemove, CiSearch } from "react-icons/ci";
 import { MouseEvent, KeyboardEvent } from "react";
 import { cn } from "@/lib/utils";
+import { useClickOutside } from "@/lib/hooks";
 
 type BaseSearchInputPropsType = {
   htmlId: string;
@@ -24,6 +26,7 @@ type BaseSearchInputPropsType = {
   setErrorMessage: (inputText: string) => void;
   initialValue: string;
   handleAutocomplete: (inputText: string) => Promise<any>;
+  defaultColor: string;
 };
 
 export default function BaseSearchInput({
@@ -38,12 +41,20 @@ export default function BaseSearchInput({
   setErrorMessage,
   initialValue,
   handleAutocomplete,
+  defaultColor,
 }: BaseSearchInputPropsType) {
   const [inputText, setInputText] = useState(initialValue || "");
   const [searchValues, setSearchValues] = useState([]);
   const [submittedText, setSubmittedText] = useState("");
   const [searchText] = useDebounce(inputText, 500);
   const [isFocused, setIsFocused] = useState(false);
+  const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
+  const [color, setColor] = useState(defaultColor);
+
+  const colorPopover = useRef(null);
+  const iconButtonRef = useRef(null);
+
+  useClickOutside(colorPopover, () => setIsColorPickerOpen(false));
 
   const handleSubmit = (event: KeyboardEvent | MouseEvent) => {
     if ("key" in event && event.key === "Enter") {
@@ -117,8 +128,28 @@ export default function BaseSearchInput({
       <Label hidden className="text-gray-300" htmlFor={htmlId}>
         {label}
       </Label>
-      <div className="flex flex-row items-center">
-        <Icon size="1.8em" className="mr-2" />
+      <div className="flex flex-row items-center cursor-pointer">
+        <div className="relative">
+          <Button
+            className={`mr-2 p-1 bg-transparent border border-transparent ${
+              isColorPickerOpen && "border-white"
+            }`}
+            ref={iconButtonRef}
+            style={{ backgroundColor: color }}
+            onClick={(e) => {
+              e.preventDefault();
+              setIsColorPickerOpen(!isColorPickerOpen);
+            }}
+          >
+            <Icon size="1.8em" />
+          </Button>
+
+          {isColorPickerOpen && (
+            <div className="popover absolute z-20" ref={colorPopover}>
+              <HexColorPicker color={color} onChange={setColor} />
+            </div>
+          )}
+        </div>
 
         <div
           className="relative flex-1"

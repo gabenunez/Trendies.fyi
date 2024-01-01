@@ -49,6 +49,7 @@ export default function ViewButton({
 
   const DropdownButton = ({
     view,
+    isPrimaryDropdownButton,
   }: {
     view: Views;
     isPrimaryDropdownButton?: boolean;
@@ -57,6 +58,8 @@ export default function ViewButton({
     const title = options[view].name;
 
     const handleOnClick = () => {
+      if (isPrimaryDropdownButton) return;
+
       let updatedQueryParams;
 
       updatedQueryParams = removeItemFromQueryParm({
@@ -84,8 +87,10 @@ export default function ViewButton({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="absolute z-10 opacity-60 hover:opacity-100 top-0 right-0 p-2">
-        <DropdownButton view={currentView} isPrimaryDropdownButton />
+      <DropdownMenuTrigger asChild>
+        <div className="absolute z-10 opacity-60 hover:opacity-100 top-0 right-0 p-2">
+          <DropdownButton view={currentView} isPrimaryDropdownButton />
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-full bg-transparent hover:bg-transparent border-none shadow-none text-center opacity-100 ">
         {filteredViews.map((view) => {

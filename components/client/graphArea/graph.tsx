@@ -60,11 +60,13 @@ export default function Graph({
   serverFetchedTrends,
   ogMode,
   splitMode,
+  searchParams,
 }: {
   serverFetchedStocks: StocksType;
   serverFetchedTrends: TrendsType;
   ogMode: boolean;
   splitMode: boolean;
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
   let graphLineData: { time: number }[] = [];
 

@@ -13,11 +13,15 @@ import {
 export default function TrendsSearchInput({
   initialValue,
   errors,
+  index,
 }: {
   initialValue: string;
+  index: number;
 }) {
   const router = useRouter();
   const [inputFinalized, setInputFinalized] = useState(false);
+
+  console.log(index);
 
   const initErrorMessage = errors?.find(
     (error) => error.searchTerm === initialValue

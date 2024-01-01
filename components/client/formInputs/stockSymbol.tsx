@@ -46,8 +46,14 @@ export default function StockSymbolInput({
       newItem: inputText,
     });
 
-    const updatedQueryParams = removeItemFromQueryParm({
+    const addedColorQueryParams = addItemToQueryParm({
       params: addedItemQueryParams,
+      paramKey: "stocksColors",
+      newItem: "3b82f5",
+    });
+
+    const updatedQueryParams = removeItemFromQueryParm({
+      params: addedColorQueryParams,
       paramKey: "addNew",
       itemToDelete: "stocks",
     });

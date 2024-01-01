@@ -11,6 +11,7 @@ type FormInputType = {
   id: string;
   initialValue?: string;
   initialData?: {};
+  index: number;
 };
 
 export default async function SidebarForm({
@@ -53,12 +54,13 @@ export default async function SidebarForm({
             };
           });
         } else {
-          newComponents = terms.map((term) => {
+          newComponents = terms.map((term, index) => {
             return {
               component: componentMappings[key as LineTypes].component,
               id: crypto.randomUUID(),
               initialValue: term,
               errors: componentMappings[key as LineTypes]?.errors,
+              index: index,
             };
           });
         }
@@ -89,6 +91,7 @@ export default async function SidebarForm({
         return (
           <Component
             key={id}
+            index={line.index}
             initialValue={initialValue}
             initialData={initialData}
             errors={errors}
