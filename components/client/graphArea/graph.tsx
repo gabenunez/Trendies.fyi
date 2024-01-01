@@ -153,8 +153,8 @@ export default function Graph({
                 data={graphLineData}
                 margin={{
                   top: 0,
-                  right: !ogMode ? 5 : 0,
-                  left: !ogMode ? -10 : 0,
+                  right: !ogMode ? 10 : 0,
+                  left: !ogMode ? -5 : 0,
                   bottom: !ogMode ? 5 : 0,
                 }}
                 syncId={syncId}
@@ -200,8 +200,8 @@ export default function Graph({
                 data={graphLineData}
                 margin={{
                   top: 0,
-                  right: !ogMode ? 5 : 0,
-                  left: !ogMode ? -10 : 0,
+                  right: !ogMode ? 10 : 0,
+                  left: !ogMode ? -5 : 0,
                   bottom: !ogMode ? 5 : 0,
                 }}
                 syncId={syncId}
@@ -243,8 +243,8 @@ export default function Graph({
           data={graphLineData}
           margin={{
             top: 0,
-            right: !ogMode ? 5 : 0,
-            left: !ogMode ? -10 : 0,
+            right: !ogMode ? 10 : 0,
+            left: !ogMode ? -5 : 0,
             bottom: !ogMode ? 0 : 0,
           }}
         >

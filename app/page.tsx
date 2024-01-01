@@ -9,6 +9,7 @@ import {
 } from "../lib/utils";
 import { Metadata, ResolvingMetadata } from "next";
 import { headers } from "next/headers";
+import { AiOutlineStock } from "react-icons/ai";
 
 const baseUrl = getCurrentURL();
 
@@ -36,6 +37,8 @@ export async function generateMetadata(
   const currentRequestUrl = headersList.get("x-request-url");
 
   return {
+    title:
+      "Trendies.fyi | Compare Stocks vs Google Trends for ultimate insights!",
     metadataBase: new URL(baseUrl),
     openGraph: {
       images: isOGmode
@@ -52,7 +55,6 @@ export default async function Homepage({
 }) {
   let serverFetchedStocks: StocksType = [];
   let serverFetchedTrends: TrendsType = [];
-  let stocksColors = [];
   const ogMode = searchParams.ogMode;
   const splitMode = searchParams.mode === "split";
 
@@ -116,11 +118,17 @@ export default async function Homepage({
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-800 text-white">
       <aside className="w-full md:w-1/3 p-4 border-r border-gray-600">
-        <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tighter text-center text-green-500 hover:text-blue-500 transition-colors duration-500 ease-in-out">
-          StocksVsTrends
-        </h1>
+        <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tighter text-center text-green-500 hover:text-blue-500 transition-colors duration-500 ease-in-out flex justify-center align-middle">
+          <AiOutlineStock size="1.3em" />
+          <h1>
+            <div>
+              Trendies<span className="text-base">.fyi</span>
+            </div>
+          </h1>
+        </div>
         <QueryManager />
-        <Separator className="my-4" />
+
+        <Separator style={{ backgroundColor: "#4a5462" }} className="my-4" />
 
         <Sidebar
           searchParams={searchParams}
