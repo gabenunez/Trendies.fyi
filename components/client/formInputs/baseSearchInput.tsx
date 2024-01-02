@@ -54,7 +54,7 @@ export default function BaseSearchInput({
   const [inputText, setInputText] = useState(initialValue || "");
   const [searchValues, setSearchValues] = useState([]);
   const [submittedText, setSubmittedText] = useState("");
-  const [searchText] = useDebounce(inputText, 500);
+  const [searchText] = useDebounce(inputText, 300);
   const [isFocused, setIsFocused] = useState(false);
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
 
