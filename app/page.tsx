@@ -55,63 +55,69 @@ export default async function Homepage({
 }) {
   let serverFetchedStocks: StocksType = [];
   let serverFetchedTrends: TrendsType = [];
-  const ogMode = searchParams.ogMode;
-  const splitMode = searchParams.mode === "split";
+  let ogMode;
+  let splitMode;
 
-  const headersList = headers();
-  const currentRequestUrl = headersList.get("x-request-url");
+  if (Object.keys(searchParams).length) {
+    console.log(searchParams);
+    ogMode = searchParams.ogMode;
+    splitMode = searchParams.mode === "split";
 
-  if (!ogMode && (searchParams.stocks || searchParams.trends)) {
-    internalFetchRequest("/api-private/og", {
-      url: currentRequestUrl,
-    });
-  }
+    const headersList = headers();
+    const currentRequestUrl = headersList.get("x-request-url");
 
-  if (searchParams.stocks) {
-    let arrOfStocks: string[] = [];
-    if (typeof searchParams.stocks === "string") {
-      arrOfStocks = splitParamData({
-        paramData: searchParams.stocks,
+    if (!ogMode && (searchParams.stocks || searchParams.trends)) {
+      internalFetchRequest("/api-private/og", {
+        url: currentRequestUrl,
       });
     }
 
-    const arrOfStockPromises = arrOfStocks.map((symbol) =>
-      internalFetchRequest("/api-private/stocks", {
-        stockSymbol: symbol,
-      })
-    );
+    if (searchParams.stocks) {
+      let arrOfStocks: string[] = [];
+      if (typeof searchParams.stocks === "string") {
+        arrOfStocks = splitParamData({
+          paramData: searchParams.stocks,
+        });
+      }
 
-    const allStockData = await Promise.all(arrOfStockPromises);
-
-    serverFetchedStocks = allStockData.map((stockData, index) => {
-      return {
-        searchTerm: arrOfStocks[index],
-        data: stockData,
-      };
-    });
-  }
-
-  if (searchParams.trends) {
-    if (typeof searchParams.trends === "string") {
-      const googleTrendsQueries = splitParamData({
-        paramData: searchParams.trends,
-      });
-
-      const arrOfTrendsPromises = googleTrendsQueries.map((query) =>
-        internalFetchRequest("/api-private/google-trends", {
-          trendsQuery: query,
+      const arrOfStockPromises = arrOfStocks.map((symbol) =>
+        internalFetchRequest("/api-private/stocks", {
+          stockSymbol: symbol,
         })
       );
 
-      const allTrendsData = await Promise.all(arrOfTrendsPromises);
+      const allStockData = await Promise.all(arrOfStockPromises);
 
-      serverFetchedTrends = allTrendsData.map((item) => {
+      serverFetchedStocks = allStockData.map((stockData, index) => {
         return {
-          searchTerm: item.trendsQuery,
-          data: item.data,
-          error: item?.error,
+          searchTerm: arrOfStocks[index],
+          data: stockData,
         };
       });
+    }
+
+    if (searchParams.trends) {
+      if (typeof searchParams.trends === "string") {
+        const googleTrendsQueries = splitParamData({
+          paramData: searchParams.trends,
+        });
+
+        const arrOfTrendsPromises = googleTrendsQueries.map((query) =>
+          internalFetchRequest("/api-private/google-trends", {
+            trendsQuery: query,
+          })
+        );
+
+        const allTrendsData = await Promise.all(arrOfTrendsPromises);
+
+        serverFetchedTrends = allTrendsData.map((item) => {
+          return {
+            searchTerm: item.trendsQuery,
+            data: item.data,
+            error: item?.error,
+          };
+        });
+      }
     }
   }
 
